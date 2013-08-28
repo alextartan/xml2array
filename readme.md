@@ -15,7 +15,7 @@ Usage Examples
 #### Basic usage
 
     $array = XML2Array::createArray($xml);
-    $xml = Array2XML::createXML($array);
+    $xml = Array2XML::createXml($array);
 
 Note that there's no need to specify the 'rootNode' parameter from the previous implementation. If the array contains a single root item, that will automatically be used as the root node.
 
@@ -24,7 +24,7 @@ Note that there's no need to specify the 'rootNode' parameter from the previous 
 Of course, if you need a drop-in replacement, the old syntax works as before.
 
     $array = XML2Array::createArray($xml);
-    $xml = Array2XML::createXML('rootNode', $array);
+    $xml = Array2XML::createXml('rootNode', $array);
 
 #### Preserve namespaces
     
@@ -41,9 +41,6 @@ Of course, if you need a drop-in replacement, the old syntax works as before.
         'valueKey'      => '$value',
     );
     $array = XML2Array::createArray($xml, $config);
-    $xml = Array2XML::createXML($array, $config);
+    $xml = Array2XML::createXml($array, $config);
 
-Further Reading
----
-
-Original [XML2Array](http://www.lalit.org/lab/convert-xml-to-array-in-php-xml2array/) and [Array2XML](http://www.lalit.org/lab/convert-php-array-to-xml-with-attributes/) libraries from Lalit.org
+Forked from https://github.com/rentpost/xml2array
