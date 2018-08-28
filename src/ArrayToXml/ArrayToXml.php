@@ -9,10 +9,7 @@ use DOMNode;
 /**
  * Array2XML: A class to convert array in PHP to XML
  * Returns the XML in form of DOMDocument class.
- * Throws an exception if the tag name or attribute name has illegal chars.
- * Takes into account attributes names unlike SimpleXML in PHP.
  *
- * Author : Lalit Patel, Verdant Industries
  * Website: https://github.com/alextartan/xml2array
  * License: Apache License 2.0
  *          http://www.apache.org/licenses/LICENSE-2.0

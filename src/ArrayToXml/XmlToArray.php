@@ -9,20 +9,10 @@ use DOMDocument;
  * XML2Array: A class to convert XML to an array in PHP
  * Takes a DOMDocument object or an XML string as input.
  *
- * See Array2XML: http://www.lalit.org/lab/convert-php-array-to-xml-with-attributes
- *
  * Author : Lalit Patel, Verdant Industries
- * Website: http://www.lalit.org/lab/convert-xml-to-array-in-php-xml2array
+ * Website: https://github.com/alextartan/xml2array
  * License: Apache License 2.0
  *          http://www.apache.org/licenses/LICENSE-2.0
- * Version: 0.1 (07 Dec 2011)
- * Version: 0.2 (04 Mar 2012)
- *             Fixed typo 'DomDocument' to 'DOMDocument'
- * Version: 0.3 (26 August 2013), Verdant Industries
- *          - Converted from static usage to instance usage with static facade for compatibility
- *          - Added configurable attribute/cdata/value special keys
- *          - Added configurable option to retain tag and attribute namespacing
- *
  * Usage:
  *       $array = XML2Array::createArray($xml);
  *       $array = XML2Array::createArray($xml, array('useNamespaces' => true));
@@ -36,7 +26,7 @@ final class XmlToArray
     const ATTRIBUTE_NAMESPACE_SEPARATOR = ':';
 
     /** @var array The configuration of the current instance */
-    private $config = [];
+    private $config;
 
     /** @var DOMDocument The working XML document */
     private $xml;
@@ -186,12 +176,8 @@ final class XmlToArray
 
     /**
      * Convert an XML DOMDocument (or part thereof) to an array
-     *
-     * @param \DOMNode $node A single XML DOMNode
-     *
-     * @return array An array representation of the input node
      */
-    private function convert(\DOMNode $node)
+    private function convert(\DOMNode $node): array
     {
         $output = [];
 

@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: redline
- * Date: 28.08.2018
- * Time: 16:06
- */
+declare(strict_types=1);
 
 namespace Array2XmlTest;
 
