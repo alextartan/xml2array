@@ -176,8 +176,10 @@ final class XmlToArray
 
     /**
      * Convert an XML DOMDocument (or part thereof) to an array
+     *
+     * @return array|string
      */
-    private function convert(\DOMNode $node): array
+    private function convert(\DOMNode $node)
     {
         $output = [];
 

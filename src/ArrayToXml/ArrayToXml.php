@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Array2Xml;
 
 use DOMDocument;
+use DOMElement;
 use DOMNode;
 
 /**
@@ -20,26 +21,20 @@ use DOMNode;
  */
 final class ArrayToXml
 {
-    /** @var string */
-    private $encoding = 'UTF-8';
-
     /** @var DOMDocument */
     private $xml;
 
     /**
-     * Convert an Array to XML.
+     * Initialize the root XML node [optional].
      *
-     * @param string $nodeName - name of the root node to be converted
-     * @param array  $arr      - array to be converted
-     *
-     * @return DOMDocument
+     * @param string $version
+     * @param string $encoding
+     * @param bool   $formatOutput
      */
-    public function createXML(string $nodeName, array $arr = []): DOMDocument
+    public function __construct(string $version = '1.0', string $encoding = 'UTF-8', bool $formatOutput = false)
     {
-        $xml = $this->getXmlRoot();
-        $xml->appendChild($this->convert($nodeName, $arr));
-
-        return $xml;
+        $this->xml               = new DomDocument($version, $encoding);
+        $this->xml->formatOutput = $formatOutput;
     }
 
     public function buildXml(array $data): DOMDocument
@@ -50,21 +45,9 @@ final class ArrayToXml
 
         $firstKey = array_keys($data)[0];
 
-        return $this->createXML($firstKey, $data[$firstKey]);
-    }
+        $this->xml->appendChild($this->convert($firstKey, $data[$firstKey]));
 
-    /**
-     * Initialize the root XML node [optional].
-     *
-     * @param string $version
-     * @param string $encoding
-     * @param bool   $formatOutput
-     */
-    public function init(string $version = '1.0', string $encoding = 'UTF-8', bool $formatOutput = false)
-    {
-        $this->xml               = new DomDocument($version, $encoding);
-        $this->xml->formatOutput = $formatOutput;
-        $this->encoding          = $encoding;
+        return $this->xml;
     }
 
     /**
@@ -88,92 +71,96 @@ final class ArrayToXml
     /**
      * Convert an Array to XML.
      *
-     * @param string $nodeName - name of the root node to be converted
-     * @param array  $arr      - array to be converted
+     * @param string       $nodeName - name of the root node to be converted
+     * @param array|string $data     - array to be converted
      *
      * @return DOMNode
      *
      * @throws \InvalidArgumentException
      */
-    private function convert($nodeName, $arr = []): DOMNode
+    private function convert(string $nodeName, $data = []): DOMNode
     {
-        //print_arr($node_name);
-        $xml  = $this->getXmlRoot();
-        $node = $xml->createElement($nodeName);
-        if (is_array($arr)) {
-            if (array_key_exists('@attributes', $arr) && is_array($arr['@attributes'])) {
-                foreach ($arr['@attributes'] as $key => $value) {
-                    if (!$this->isValidTagName($key)) {
-                        throw new \InvalidArgumentException(
-                            '[Array2XML] Illegal character in attribute name. attribute: ' . $key . ' in node: ' . $nodeName
-                        );
-                    }
-                    $node->setAttribute($key, $this->bool2str($value));
-                }
-                unset($arr['@attributes']); //remove the key from the array once done.
-            }
+        $node = $this->xml->createElement($nodeName);
 
-            if (array_key_exists('@value', $arr)) {
-                $node->appendChild($xml->createTextNode($this->bool2str($arr['@value'])));
-                //remove the key from the array once done.
-                unset($arr['@value']);
-
-                //return from recursion, as a note with value cannot have child nodes.
-                return $node;
-            }
-
-            if (array_key_exists('@cdata', $arr)) {
-                $node->appendChild($xml->createCDATASection($this->bool2str($arr['@cdata'])));
-                //remove the key from the array once done.
-                unset($arr['@cdata']);
-
-                //return from recursion, as a note with cdata cannot have child nodes.
-                return $node;
-            }
-        }
-        //create subnodes using recursion
-        if (is_array($arr)) {
-            // recurse to get the node for that key
-            foreach ($arr as $key => $value) {
-                if (!$this->isValidTagName($key)) {
-                    throw new \Exception('[Array2XML] Illegal character in tag name. tag: ' . $key . ' in node: ' . $nodeName);
-                }
-                if (is_array($value) && is_numeric(key($value))) {
-                    // MORE THAN ONE NODE OF ITS KIND;
-                    // if the new array is numeric index, means it is array of nodes of the same kind
-                    // it should follow the parent key name
-                    foreach ($value as $v) {
-                        $node->appendChild($this->convert($key, $v));
-                    }
-                } else {
-                    // ONLY ONE NODE OF ITS KIND
-                    $node->appendChild($this->convert($key, $value));
-                }
-                unset($arr[$key]); //remove the key from the array once done.
-            }
-        }
-
-        // after we are done with all the keys in the array (if it is one)
-        // we check if it has any text value, if yes, append it.
-        if (!is_array($arr)) {
-            $node->appendChild($xml->createTextNode($this->bool2str($arr)));
+        if (is_array($data)) {
+            $this->convertArray($node, $nodeName, $data);
+        } else {
+            // after we are done with all the keys in the array (if it is one)
+            // we check if it has any text value, if yes, append it.
+            $this->convertString($node, $data);
         }
 
         return $node;
     }
 
-    /**
-     * Get the root XML node, if there isn't one, create it.
-     *
-     * @return DomDocument
-     */
-    private function getXmlRoot(): DOMDocument
+    private function convertString(DOMElement $node, string $string)
     {
-        if ($this->xml === null) {
-            $this->init();
+        $node->appendChild($this->xml->createTextNode($this->bool2str($string)));
+    }
+
+    private function convertArray(DOMElement $node, string $nodeName, array $array)
+    {
+        $array = $this->parseAttributes($node, $nodeName, $array);
+        $array = $this->parseValue($node, $array);
+        $array = $this->parseCdata($node, $array);
+
+        // now parse the actual keys->value pairs
+        foreach ($array as $key => $value) {
+            if (!$this->isValidTagName($key)) {
+                throw new \Exception('[Array2XML] Illegal character in tag name. tag: ' . $key . ' in node: ' . $nodeName);
+            }
+            if (is_array($value) && is_numeric(key($value))) {
+                // MORE THAN ONE NODE OF ITS KIND;
+                // if the new array is numeric index, means it is array of nodes of the same kind
+                // it should follow the parent key name
+                foreach ($value as $v) {
+                    $node->appendChild($this->convert($key, $v));
+                }
+            } else {
+                // ONLY ONE NODE OF ITS KIND
+                $node->appendChild($this->convert($key, $value));
+            }
+            unset($array[$key]); //remove the key from the array once done.
+        }
+    }
+
+    private function parseAttributes(DOMElement $node, string $nodeName, array $array): array
+    {
+        if (array_key_exists('@attributes', $array) && is_array($array['@attributes'])) {
+            foreach ($array['@attributes'] as $key => $value) {
+                if (!$this->isValidTagName($key)) {
+                    throw new \InvalidArgumentException(
+                        '[Array2XML] Illegal character in attribute name. attribute: ' . $key . ' in node: ' . $nodeName
+                    );
+                }
+                $node->setAttribute($key, $this->bool2str($value));
+            }
+            unset($array['@attributes']); //remove the key from the array once done.
         }
 
-        return $this->xml;
+        return $array;
+    }
+
+    private function parseValue(DOMElement $node, array $array): array
+    {
+        if (array_key_exists('@value', $array)) {
+            $node->appendChild($this->xml->createTextNode($this->bool2str($array['@value'])));
+            //remove the key from the array once done.
+            unset($array['@value']);
+        }
+
+        return $array;
+    }
+
+    private function parseCdata(DOMElement $node, array $array): array
+    {
+        if (array_key_exists('@cdata', $array)) {
+            $node->appendChild($this->xml->createCDATASection($this->bool2str($array['@cdata'])));
+            //remove the key from the array once done.
+            unset($array['@cdata']);
+        }
+
+        return $array;
     }
 
     /**
