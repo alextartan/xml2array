@@ -1,3 +1,40 @@
 sudo: false
 
 language: php
+
+cache:
+  directories:
+  - $HOME/.composer/cache
+
+env:
+  global:
+  - COMPOSER_ARGS="--no-interaction"
+  - COVERAGE_DEPS="satooshi/php-coveralls"
+  - LEGACY_DEPS="phpunit/phpunit"
+
+matrix:
+  include:
+  - php: 7
+    env:
+    - CS_CHECK=true
+
+before_install:
+- if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
+- travis_retry composer self-update
+
+install:
+- travis_retry composer install $COMPOSER_ARGS --ignore-platform-reqs
+- if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev $COMPOSER_ARGS $COVERAGE_DEPS ; fi
+- stty cols 120
+- export COLUMNS=120
+- composer show
+
+script:
+- if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
+- if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
+
+after_script:
+- if [[ $TEST_COVERAGE == 'true' ]]; then composer upload-coverage ; fi
+
+notifications:
+  email: false
