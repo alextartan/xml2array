@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Array2Xml;
+namespace RedLine\Array2Xml;
 
 use DOMDocument;
 use DOMElement;

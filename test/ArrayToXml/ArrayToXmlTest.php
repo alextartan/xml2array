@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Array2XmlTest;
+namespace RedLineTest\Array2Xml;
 
-use Array2Xml\ArrayToXml;
-use Array2Xml\XmlToArray;
 use PHPUnit\Framework\TestCase;
+use RedLine\Array2Xml\ArrayToXml;
+use RedLine\Array2Xml\XmlToArray;
 
 class ArrayToXmlTest extends TestCase
 {
@@ -89,7 +89,8 @@ class ArrayToXmlTest extends TestCase
         $doc           = new \DOMDocument('1.0', 'UTF-8');
         $doc->encoding = 'UTF-8';
         $doc->loadXML(
-            implode('',
+            implode(
+                '',
                 [
                     '<?xml version="1.0" encoding="UTF-8"?>',
                     '<messages>',

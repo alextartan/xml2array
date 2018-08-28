@@ -9,7 +9,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Array2Xml\\": "src/ArrayToXml"
+      "RedLine\\Array2Xml\\": "src/ArrayToXml"
     }
   },
   "require-dev": {
@@ -17,7 +17,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Array2XmlTest\\": "test/ArrayToXml"
+      "RedLineTest\\Array2Xml\\": "test/ArrayToXml"
     }
   }
 }

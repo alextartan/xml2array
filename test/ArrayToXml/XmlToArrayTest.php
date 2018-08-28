@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Array2XmlTest;
+namespace RedLineTest\Array2Xml;
 
-use Array2Xml\XmlToArray;
 use PHPUnit\Framework\TestCase;
+use RedLine\Array2Xml\XmlToArray;
 
 class XmlToArrayTest extends TestCase
 {

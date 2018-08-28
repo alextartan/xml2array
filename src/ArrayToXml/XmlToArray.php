@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Array2Xml;
+namespace RedLine\Array2Xml;
 
 use DOMDocument;
+use DOMNode;
+use Exception;
 
 /**
  * XML2Array: A class to convert XML to an array in PHP
@@ -14,8 +16,10 @@ use DOMDocument;
  * License: Apache License 2.0
  *          http://www.apache.org/licenses/LICENSE-2.0
  * Usage:
- *       $array = XML2Array::createArray($xml);
- *       $array = XML2Array::createArray($xml, array('useNamespaces' => true));
+ *       $array = XmlToArray::createArrayFromString($xmlString);
+ *       $array = XmlToArray::createArrayFromString($xmlString, ['useNamespaces' => false, ...]);
+ *       $array = XmlToArray::createArrayFromDomDocument($domDoc);
+ *       $array = XmlToArray::createArrayFromDomDocument($domDoc, ['useNamespaces' => false, ...]);
  */
 final class XmlToArray
 {
@@ -60,8 +64,6 @@ final class XmlToArray
      *
      * @param string $inputXml The XML to convert to an array
      * @param array  $config   The configuration to use for the conversion
-     *
-     * @return array An array representation of the input XML
      */
     public static function createArrayFromString(string $inputXml, array $config = []): array
     {
@@ -76,8 +78,6 @@ final class XmlToArray
      *
      * @param DOMDocument $inputXml The XML to convert to an array
      * @param array       $config   The configuration to use for the conversion
-     *
-     * @return array An array representation of the input XML
      */
     public static function createArrayFromDomDocument(DOMDocument $inputXml, array $config = []): array
     {
@@ -119,14 +119,14 @@ final class XmlToArray
         $this->xml = $this->createDomDocument();
         $parsed    = $this->xml->loadXML($inputXml);
         if (!$parsed) {
-            throw new \Exception('[XML2Array] Error parsing the XML string.');
+            throw new Exception('[XML2Array] Error parsing the XML string.');
         }
 
         // Convert the XML to an array, starting with the root node
         $docNodeName         = $this->xml->documentElement->nodeName;
         $array[$docNodeName] = $this->convert($this->xml->documentElement);
 
-        // Add namespacing information to the root node
+        // Add namespace information to the root node
         if (!empty($this->namespaces)) {
             if (!isset($array[$docNodeName][$this->config['attributesKey']])) {
                 $array[$docNodeName][$this->config['attributesKey']] = [];
@@ -179,7 +179,7 @@ final class XmlToArray
      *
      * @return array|string
      */
-    private function convert(\DOMNode $node)
+    private function convert(DOMNode $node)
     {
         $output = [];
 
@@ -198,6 +198,7 @@ final class XmlToArray
                 for ($i = 0, $m = $node->childNodes->length; $i < $m; $i++) {
                     $child = $node->childNodes->item($i);
                     $value = $this->convert($child);
+                    /** @noinspection UnSafeIsSetOverArrayInspection */
                     if (isset($child->tagName)) {
                         $temp = $child->nodeName;
 
@@ -248,11 +249,11 @@ final class XmlToArray
     /**
      * Get the namespace of the supplied node, and add it to the list of known namespaces for this document
      *
-     * @param \DOMNode $node
+     * @param DOMNode $node
      *
      * @return void
      */
-    private function collateNamespaces(\DOMNode $node)
+    private function collateNamespaces(DOMNode $node)
     {
         if ($node->namespaceURI &&
             !array_key_exists($node->namespaceURI, $this->namespaces) &&
