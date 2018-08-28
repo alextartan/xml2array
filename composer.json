@@ -13,11 +13,23 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "6.5.*"
+    "phpunit/phpunit": "6.5.*",
+    "zendframework/zend-coding-standard": "~1.0.0"
   },
   "autoload-dev": {
     "psr-4": {
       "RedLineTest\\Array2Xml\\": "test/ArrayToXml"
     }
+  },
+  "scripts": {
+    "check": [
+      "@cs-check",
+      "@test"
+    ],
+    "cs-check": "phpcs",
+    "cs-fix": "phpcbf",
+    "test": "phpunit --colors=always",
+    "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+    "upload-coverage": "coveralls -v"
   }
 }
