@@ -109,7 +109,6 @@ class ArrayToXmlTest extends TestCase
                     '</messages>',
                 ]
             )
-
         );
 
         $output = (new ArrayToXml)->buildXml(
