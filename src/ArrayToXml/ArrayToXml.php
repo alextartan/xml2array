@@ -107,7 +107,9 @@ final class ArrayToXml
         // now parse the actual keys->value pairs
         foreach ($array as $key => $value) {
             if (!$this->isValidTagName($key)) {
-                throw new \Exception('[Array2XML] Illegal character in tag name. tag: ' . $key . ' in node: ' . $nodeName);
+                throw new \Exception(
+                    '[Array2XML] Illegal character in tag name. tag: ' . $key . ' in node: ' . $nodeName
+                );
             }
             if (is_array($value) && is_numeric(key($value))) {
                 // MORE THAN ONE NODE OF ITS KIND;
