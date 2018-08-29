@@ -156,4 +156,53 @@ class ArrayToXmlTest extends TestCase
             $output->saveXML()
         );
     }
+
+    public function testWithValue()
+    {
+        $doc           = new \DOMDocument('1.0', 'UTF-8');
+        $doc->encoding = 'UTF-8';
+        $doc->loadXML(
+            implode(
+                '',
+                [
+                    '<?xml version="1.0" encoding="UTF-8"?>',
+                    '<messages>',
+                    '<note id="501">',
+                    'test',
+                    '<to>Tove</to>',
+                    '<from>Jani</from>',
+                    '<heading>Reminder</heading>',
+                    '<body><![CDATA[I can use double dashes as much as I want (along with <, &, \', and ")]]></body>',
+                    '</note>',
+                    '</messages>',
+                ]
+            )
+        );
+
+        $output = (new ArrayToXml)->buildXml(
+            [
+                'messages' => [
+                    'note' => [
+                        [
+                            '@attributes' => [
+                                'id' => '501',
+                            ],
+                            '@value'      => 'test',
+                            'to'          => 'Tove',
+                            'from'        => 'Jani',
+                            'heading'     => 'Reminder',
+                            'body'        => [
+                                '@cdata' => 'I can use double dashes as much as I want (along with <, &, \', and ")',
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        static::assertSame(
+            $doc->saveXML(),
+            $output->saveXML()
+        );
+    }
 }
