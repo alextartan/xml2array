@@ -282,4 +282,34 @@ class XmlToArrayTest extends TestCase
             $output
         );
     }
+
+    public function testXmlWithEmptyNodes()
+    {
+        $doc = new \DOMDocument('1.0', 'UTF-8');
+        $doc->loadXML(
+            implode(
+                '',
+                [
+                    '<table>',
+                    '<name></name>',
+                    '<width>80</width>',
+                    '<length>120</length>',
+                    '</table>',
+                ]
+            )
+        );
+
+        $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
+
+        static::assertSame(
+            [
+                'table' => [
+                    'name'        => '',
+                    'width'       => '80',
+                    'length'      => '120',
+                ],
+            ],
+            $output
+        );
+    }
 }
