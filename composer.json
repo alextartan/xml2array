@@ -1,8 +1,21 @@
 {
   "name": "alextartan/xml2array",
-  "description": "Convert from XML to array, array to XML, based on libs from lalit.org",
+  "description": "Convert from XML to array, array to XML. PHP7, 100% unit test coverage, PSR2 compliant",
+  "keywords": [
+    "xml",
+    "array"
+  ],
   "license": "Apache-2.0",
   "type": "library",
+  "homepage": "https://github.com/alextartan/xml2array",
+  "authors": [
+    {
+      "name": "Alex Tartan",
+      "email": "alex.tartan@gmail.com",
+      "homepage": "http://web-factory.co",
+      "role": "Lead"
+    }
+  ],
   "require": {
     "php": ">=7.0",
     "ext-dom": "*"

@@ -9,33 +9,33 @@ use DOMNode;
 use RedLine\Array2Xml\Exception\ConversionException;
 
 /**
- * Array2XML: A class to convert array in PHP to XML
- * Returns the XML in form of DOMDocument class.
- *
- * Website: https://github.com/alextartan/xml2array
- * License: Apache License 2.0
- *          http://www.apache.org/licenses/LICENSE-2.0
- *
- * Usage:
- *       $xml = Array2XML::createXML($array);
- *       echo $xml->saveXML();
+ * This class converts an array into an XML file
  */
 final class ArrayToXml
 {
     /** @var DOMDocument */
     private $xml;
 
-    /**
-     * Initialize the root XML node [optional].
-     *
-     * @param string $version
-     * @param string $encoding
-     * @param bool   $formatOutput
-     */
-    public function __construct(string $version = '1.0', string $encoding = 'UTF-8', bool $formatOutput = false)
+    /** @var array */
+    private $config;
+
+    public function __construct(array $config = [])
     {
-        $this->xml               = new DomDocument($version, $encoding);
-        $this->xml->formatOutput = $formatOutput;
+        // string $version = '1.0', string $encoding = 'UTF-8', bool $formatOutput = false
+        $this->config = array_merge(
+            [
+                'version'       => '1.0',
+                'encoding'      => 'UTF-8',
+                'attributesKey' => '@attributes',
+                'cdataKey'      => '@cdata',
+                'valueKey'      => '@value',
+                'formatOutput'  => false,
+            ],
+            $config
+        );
+
+        $this->xml               = new DomDocument((string)$this->config['version'], $this->config['encoding']);
+        $this->xml->formatOutput = (bool)$this->config['formatOutput'];
     }
 
     public function buildXml(array $data): DOMDocument
@@ -86,8 +86,6 @@ final class ArrayToXml
         if (is_array($data)) {
             $this->convertArray($node, $nodeName, $data);
         } else {
-            // after we are done with all the keys in the array (if it is one)
-            // we check if it has any text value, if yes, append it.
             $this->convertString($node, $this->bool2str($data));
         }
 
@@ -113,14 +111,10 @@ final class ArrayToXml
                 );
             }
             if (is_array($value) && is_numeric(key($value))) {
-                // MORE THAN ONE NODE OF ITS KIND;
-                // if the new array is numeric index, means it is array of nodes of the same kind
-                // it should follow the parent key name
                 foreach ($value as $v) {
                     $node->appendChild($this->convert($key, $v));
                 }
             } else {
-                // ONLY ONE NODE OF ITS KIND
                 $node->appendChild($this->convert($key, $value));
             }
             unset($array[$key]); //remove the key from the array once done.
@@ -129,8 +123,10 @@ final class ArrayToXml
 
     private function parseAttributes(DOMElement $node, string $nodeName, array $array): array
     {
-        if (array_key_exists('@attributes', $array) && is_array($array['@attributes'])) {
-            foreach ($array['@attributes'] as $key => $value) {
+        $attributesKey = $this->config['attributesKey'];
+
+        if (array_key_exists($attributesKey, $array) && is_array($array[$attributesKey])) {
+            foreach ($array[$attributesKey] as $key => $value) {
                 if (!$this->isValidTagName($key)) {
                     throw new ConversionException(
                         'Illegal character in attribute name. attribute: ' . $key . ' in node: ' . $nodeName
@@ -138,7 +134,7 @@ final class ArrayToXml
                 }
                 $node->setAttribute($key, $this->bool2str($value));
             }
-            unset($array['@attributes']); //remove the key from the array once done.
+            unset($array[$attributesKey]); //remove the key from the array once done.
         }
 
         return $array;
@@ -146,10 +142,12 @@ final class ArrayToXml
 
     private function parseValue(DOMElement $node, array $array): array
     {
-        if (array_key_exists('@value', $array)) {
-            $node->appendChild($this->xml->createTextNode($this->bool2str($array['@value'])));
+        $valueKey = $this->config['valueKey'];
+
+        if (array_key_exists($valueKey, $array)) {
+            $node->appendChild($this->xml->createTextNode($this->bool2str($array[$valueKey])));
             //remove the key from the array once done.
-            unset($array['@value']);
+            unset($array[$valueKey]);
         }
 
         return $array;
@@ -157,18 +155,19 @@ final class ArrayToXml
 
     private function parseCdata(DOMElement $node, array $array): array
     {
-        if (array_key_exists('@cdata', $array)) {
-            $node->appendChild($this->xml->createCDATASection($this->bool2str($array['@cdata'])));
+        $cdataKey = $this->config['cdataKey'];
+
+        if (array_key_exists($cdataKey, $array)) {
+            $node->appendChild($this->xml->createCDATASection($this->bool2str($array[$cdataKey])));
             //remove the key from the array once done.
-            unset($array['@cdata']);
+            unset($array[$cdataKey]);
         }
 
         return $array;
     }
 
     /**
-     * Check if the tag name or attribute name contains illegal characters
-     * Ref: http://www.w3.org/TR/xml/#sec-common-syn.
+     * Check if the tag name or attribute name contains illegal characters (http://www.w3.org/TR/xml/#sec-common-syn)
      */
     private function isValidTagName(string $tag): bool
     {

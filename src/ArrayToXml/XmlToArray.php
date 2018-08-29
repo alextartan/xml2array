@@ -8,18 +8,7 @@ use DOMNode;
 use RedLine\Array2Xml\Exception\ConversionException;
 
 /**
- * XML2Array: A class to convert XML to an array in PHP
- * Takes a DOMDocument object or an XML string as input.
- *
- * Author : Lalit Patel, Verdant Industries
- * Website: https://github.com/alextartan/xml2array
- * License: Apache License 2.0
- *          http://www.apache.org/licenses/LICENSE-2.0
- * Usage:
- *       $array = XmlToArray::createArrayFromString($xmlString);
- *       $array = XmlToArray::createArrayFromString($xmlString, ['useNamespaces' => false, ...]);
- *       $array = XmlToArray::createArrayFromDomDocument($domDoc);
- *       $array = XmlToArray::createArrayFromDomDocument($domDoc, ['useNamespaces' => false, ...]);
+ * This class helps convert an XML to an array
  */
 final class XmlToArray
 {
@@ -29,20 +18,15 @@ final class XmlToArray
     /** The string that separates the namespace attribute from the prefix for the namespace*/
     const ATTRIBUTE_NAMESPACE_SEPARATOR = ':';
 
-    /** @var array The configuration of the current instance */
+    /** @var array */
     private $config;
 
-    /** @var DOMDocument The working XML document */
+    /** @var DOMDocument*/
     private $xml;
 
     /** @var array The working list of XML namespaces */
     private $namespaces = [];
 
-    /**
-     * Constructor
-     *
-     * @param array $config The configuration to use for this instance
-     */
     public function __construct(array $config = [])
     {
         $this->config = array_merge(
@@ -59,7 +43,7 @@ final class XmlToArray
     }
 
     /**
-     * Convert an XML DOMDocument or XML string to an array
+     * Convert an XML string to an array
      *
      * @param string $inputXml The XML to convert to an array
      *
@@ -74,7 +58,7 @@ final class XmlToArray
     }
 
     /**
-     * Convert an XML DOMDocument or XML string to an array
+     * Convert an XML DOMDocument to an array
      *
      * @param DOMDocument $inputXml The XML to convert to an array
      *
