@@ -58,16 +58,6 @@ final class XmlToArray
         );
     }
 
-    /**
-     * Initialise the instance for a conversion
-     *
-     * @return void
-     */
-    private function init()
-    {
-        $this->xml        = null;
-        $this->namespaces = [];
-    }
 
     /**
      * Creates a blank working XML document
@@ -86,8 +76,6 @@ final class XmlToArray
      */
     public function buildArrayFromString(string $inputXml): array
     {
-        $this->init();
-
         $this->xml = $this->createDomDocument();
         $parsed    = $this->xml->loadXML($inputXml);
         if (!$parsed) {
@@ -123,7 +111,6 @@ final class XmlToArray
      */
     public function buildArrayFromDomDocument(DOMDocument $inputXml): array
     {
-        $this->init();
         $this->xml = $inputXml;
 
         // Convert the XML to an array, starting with the root node
