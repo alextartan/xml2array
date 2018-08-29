@@ -59,34 +59,6 @@ final class XmlToArray
     }
 
     /**
-     * Convert an XML DOMDocument or XML string to an array
-     * A static facade for ease of use and backwards compatibility
-     *
-     * @param string $inputXml The XML to convert to an array
-     * @param array  $config   The configuration to use for the conversion
-     */
-    public static function createArrayFromString(string $inputXml, array $config = []): array
-    {
-        $instance = new XmlToArray($config);
-
-        return $instance->buildArrayFromString($inputXml);
-    }
-
-    /**
-     * Convert an XML DOMDocument or XML string to an array
-     * A static facade for ease of use and backwards compatibility
-     *
-     * @param DOMDocument $inputXml The XML to convert to an array
-     * @param array       $config   The configuration to use for the conversion
-     */
-    public static function createArrayFromDomDocument(DOMDocument $inputXml, array $config = []): array
-    {
-        $instance = new XmlToArray($config);
-
-        return $instance->buildArrayFromDomDocument($inputXml);
-    }
-
-    /**
      * Initialise the instance for a conversion
      *
      * @return void
@@ -108,18 +80,18 @@ final class XmlToArray
     /**
      * Convert an XML DOMDocument or XML string to an array
      *
-     * @param DOMDocument|string $inputXml The XML to convert to an array
+     * @param string $inputXml The XML to convert to an array
      *
      * @return array An array representation of the input XML
      */
-    public function buildArrayFromString($inputXml): array
+    public function buildArrayFromString(string $inputXml): array
     {
         $this->init();
 
         $this->xml = $this->createDomDocument();
         $parsed    = $this->xml->loadXML($inputXml);
         if (!$parsed) {
-            throw new Exception('[XML2Array] Error parsing the XML string.');
+            throw new Exception('Error parsing the XML string.');
         }
 
         // Convert the XML to an array, starting with the root node
@@ -145,7 +117,7 @@ final class XmlToArray
     /**
      * Convert an XML DOMDocument or XML string to an array
      *
-     * @param DOMDocument|string $inputXml The XML to convert to an array
+     * @param DOMDocument $inputXml The XML to convert to an array
      *
      * @return array An array representation of the input XML
      */
@@ -158,7 +130,7 @@ final class XmlToArray
         $docNodeName         = $this->xml->documentElement->nodeName;
         $array[$docNodeName] = $this->convert($this->xml->documentElement);
 
-        // Add namespacing information to the root node
+        // Add namespace information to the root node
         if (!empty($this->namespaces)) {
             if (!isset($array[$docNodeName][$this->config['attributesKey']])) {
                 $array[$docNodeName][$this->config['attributesKey']] = [];

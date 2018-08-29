@@ -10,8 +10,7 @@ class XmlToArrayTest extends TestCase
 {
     public function testBuildFromString()
     {
-        $x2a    = new XmlToArray();
-        $output = $x2a->buildArrayFromString(
+        $output = (new XmlToArray())->buildArrayFromString(
             '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Body node</body></note>'
         );
 
@@ -35,8 +34,7 @@ class XmlToArrayTest extends TestCase
             '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Body node</body></note>'
         );
 
-        $x2a    = new XmlToArray();
-        $output = $x2a->buildArrayFromDomDocument($doc);
+        $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
 
         static::assertSame(
             [
@@ -53,8 +51,7 @@ class XmlToArrayTest extends TestCase
 
     public function testBuildFromStringWithMultipleNodes()
     {
-        $x2a    = new XmlToArray();
-        $output = $x2a->buildArrayFromString(
+        $output = (new XmlToArray())->buildArrayFromString(
             '<note><to>run1</to><to>run2</to></note>'
         );
 
