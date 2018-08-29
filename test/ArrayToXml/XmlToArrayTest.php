@@ -104,7 +104,6 @@ class XmlToArrayTest extends TestCase
                     '</note>',
                 ]
             )
-
         );
 
         $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
@@ -122,6 +121,5 @@ class XmlToArrayTest extends TestCase
             ],
             $output
         );
-        //
     }
 }
