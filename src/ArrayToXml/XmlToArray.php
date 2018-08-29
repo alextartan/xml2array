@@ -58,15 +58,6 @@ final class XmlToArray
         );
     }
 
-
-    /**
-     * Creates a blank working XML document
-     */
-    private function createDomDocument(): DOMDocument
-    {
-        return new DOMDocument($this->config['version'], $this->config['encoding']);
-    }
-
     /**
      * Convert an XML DOMDocument or XML string to an array
      *
@@ -76,27 +67,10 @@ final class XmlToArray
      */
     public function buildArrayFromString(string $inputXml): array
     {
-        $this->xml = $this->createDomDocument();
+        $this->xml = new DOMDocument($this->config['version'], $this->config['encoding']);
         $this->xmlLoader($this->xml, $inputXml);
 
-        // Convert the XML to an array, starting with the root node
-        $docNodeName         = $this->xml->documentElement->nodeName;
-        $array[$docNodeName] = $this->convert($this->xml->documentElement);
-
-        // Add namespace information to the root node
-        if (!empty($this->namespaces)) {
-            if (!isset($array[$docNodeName][$this->config['attributesKey']])) {
-                $array[$docNodeName][$this->config['attributesKey']] = [];
-            }
-            foreach ($this->namespaces as $uri => $prefix) {
-                if ($prefix) {
-                    $prefix = self::ATTRIBUTE_NAMESPACE_SEPARATOR . $prefix;
-                }
-                $array[$docNodeName][$this->config['attributesKey']][self::ATTRIBUTE_NAMESPACE . $prefix] = $uri;
-            }
-        }
-
-        return $array;
+        return $this->extractArray();
     }
 
     /**
@@ -110,6 +84,11 @@ final class XmlToArray
     {
         $this->xml = $inputXml;
 
+        return $this->extractArray();
+    }
+
+    private function extractArray(): array
+    {
         // Convert the XML to an array, starting with the root node
         $docNodeName         = $this->xml->documentElement->nodeName;
         $array[$docNodeName] = $this->convert($this->xml->documentElement);
