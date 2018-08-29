@@ -67,4 +67,27 @@ class XmlToArrayTest extends TestCase
             $output
         );
     }
+
+    /**
+     * @expectedException \RedLine\Array2Xml\Exception\ConversionException
+     * @expectedExceptionMessage Start tag expected, '<' not found in Entity, line: 1
+     */
+    public function testBuildFromStringThrowsExceptionOnInvalidXml()
+    {
+        $output = (new XmlToArray())->buildArrayFromString(
+            'no_xml'
+        );
+
+        static::assertSame(
+            [
+                'note' => [
+                    'to'      => 'Tove',
+                    'from'    => 'Jani',
+                    'heading' => 'Reminder',
+                    'body'    => 'Body node',
+                ],
+            ],
+            $output
+        );
+    }
 }

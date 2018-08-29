@@ -6,6 +6,7 @@ namespace RedLine\Array2Xml;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
+use RedLine\Array2Xml\Exception\ConversionException;
 
 /**
  * Array2XML: A class to convert array in PHP to XML
@@ -40,7 +41,7 @@ final class ArrayToXml
     public function buildXml(array $data): DOMDocument
     {
         if (count($data) !== 1) {
-            throw new \InvalidArgumentException('Xml needs to have one root element');
+            throw new ConversionException('Xml needs to have one root element');
         }
 
         $firstKey = array_keys($data)[0];
@@ -107,7 +108,7 @@ final class ArrayToXml
         // now parse the actual keys->value pairs
         foreach ($array as $key => $value) {
             if (!$this->isValidTagName($key)) {
-                throw new \Exception(
+                throw new ConversionException(
                     'Illegal character in tag name. tag: ' . $key . ' in node: ' . $nodeName
                 );
             }
@@ -131,7 +132,7 @@ final class ArrayToXml
         if (array_key_exists('@attributes', $array) && is_array($array['@attributes'])) {
             foreach ($array['@attributes'] as $key => $value) {
                 if (!$this->isValidTagName($key)) {
-                    throw new \InvalidArgumentException(
+                    throw new ConversionException(
                         'Illegal character in attribute name. attribute: ' . $key . ' in node: ' . $nodeName
                     );
                 }

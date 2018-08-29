@@ -36,7 +36,7 @@ class ArrayToXmlTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \RedLine\Array2Xml\Exception\ConversionException
      * @expectedExceptionMessage Xml needs to have one root element
      */
     public function testSimpleConversionFromStringFailsOnMultipleRootNodes()
@@ -200,7 +200,7 @@ class ArrayToXmlTest extends TestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException \RedLine\Array2Xml\Exception\ConversionException
      * @expectedExceptionMessage Illegal character in tag name. tag: !WOW in node: note
      */
     public function testInvalidNodeName()
@@ -219,7 +219,7 @@ class ArrayToXmlTest extends TestCase
     }
 
     /**
-     * @expectedException \Exception
+     * @expectedException \RedLine\Array2Xml\Exception\ConversionException
      * @expectedExceptionMessage Illegal character in attribute name. attribute: !id in node: note
      */
     public function testInvalidNodeNameInAttributes()
@@ -273,7 +273,7 @@ class ArrayToXmlTest extends TestCase
                             '@value'      => 'test',
                             'to'          => 'Tove',
                             'from'        => true,
-                            'heading'     => false
+                            'heading'     => false,
                         ],
                     ],
                 ],

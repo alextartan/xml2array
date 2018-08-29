@@ -5,7 +5,7 @@ namespace RedLine\Array2Xml;
 
 use DOMDocument;
 use DOMNode;
-use Exception;
+use RedLine\Array2Xml\Exception\ConversionException;
 
 /**
  * XML2Array: A class to convert XML to an array in PHP
@@ -77,10 +77,7 @@ final class XmlToArray
     public function buildArrayFromString(string $inputXml): array
     {
         $this->xml = $this->createDomDocument();
-        $parsed    = $this->xml->loadXML($inputXml);
-        if (!$parsed) {
-            throw new Exception('Error parsing the XML string.');
-        }
+        $this->xmlLoader($this->xml, $inputXml);
 
         // Convert the XML to an array, starting with the root node
         $docNodeName         = $this->xml->documentElement->nodeName;
@@ -220,5 +217,24 @@ final class XmlToArray
         ) {
             $this->namespaces[$node->namespaceURI] = $node->lookupPrefix($node->namespaceURI);
         }
+    }
+
+    public function handleXmlError($errNo, $errStr): bool
+    {
+        $needle = 'DOMDocument::loadXML()';
+        if ($errNo === E_WARNING && (substr_count($errStr, $needle) > 0)) {
+            throw new ConversionException(trim(str_replace($needle, '', $errStr), ' :'));
+        }
+
+        return false;
+    }
+
+    private function xmlLoader(DOMDocument $xml, string $strXml): DOMDocument
+    {
+        set_error_handler([$this, 'handleXmlError']);
+        $xml->loadXML($strXml);
+        restore_error_handler();
+
+        return $xml;
     }
 }
