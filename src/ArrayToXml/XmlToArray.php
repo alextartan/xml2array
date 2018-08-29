@@ -219,14 +219,15 @@ final class XmlToArray
         }
     }
 
-    public function handleXmlError($errNo, $errStr): bool
+    /**
+     * @return void
+     */
+    public function handleXmlError($errNo, $errStr)
     {
         $needle = 'DOMDocument::loadXML()';
         if ($errNo === E_WARNING && (substr_count($errStr, $needle) > 0)) {
             throw new ConversionException(trim(str_replace($needle, '', $errStr), ' :'));
         }
-
-        return false;
     }
 
     private function xmlLoader(DOMDocument $xml, string $strXml): DOMDocument

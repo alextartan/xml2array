@@ -90,4 +90,38 @@ class XmlToArrayTest extends TestCase
             $output
         );
     }
+
+    public function testFromDomDocumentWithCdata()
+    {
+        $doc = new \DOMDocument('1.0', 'UTF-8');
+        $doc->loadXML(
+            implode(
+                '',
+                [
+                    '<note>',
+                    '<to>Tove</to><from>Jani</from><heading>Reminder</heading>',
+                    '<body><![CDATA[I can use double dashes as much as I want (along with <, &, \', and ")]]></body>',
+                    '</note>',
+                ]
+            )
+
+        );
+
+        $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
+
+        static::assertSame(
+            [
+                'note' => [
+                    'to'      => 'Tove',
+                    'from'    => 'Jani',
+                    'heading' => 'Reminder',
+                    'body'    => [
+                        '@cdata' => "I can use double dashes as much as I want (along with <, &, ', and \")",
+                    ],
+                ],
+            ],
+            $output
+        );
+        //
+    }
 }
