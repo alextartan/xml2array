@@ -70,7 +70,7 @@ class XmlToArrayTest extends TestCase
 
     /**
      * @expectedException \RedLine\Array2Xml\Exception\ConversionException
-     * @expectedExceptionMessage Start tag expected, '<' not found in Entity, line: 1
+     * @expectedExceptionMessage E_WARNING Start tag expected, '<' not found in Entity, line: 1
      */
     public function testBuildFromStringThrowsExceptionOnInvalidXml()
     {

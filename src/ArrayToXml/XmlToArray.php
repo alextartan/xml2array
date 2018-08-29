@@ -222,12 +222,29 @@ final class XmlToArray
     /**
      * @return void
      */
-    public function handleXmlError($errNo, $errStr)
+    public function handleXmlError(int $errNo, string $errStr)
     {
-        $needle = 'DOMDocument::loadXML()';
-        if ($errNo === E_WARNING && (substr_count($errStr, $needle) > 0)) {
-            throw new ConversionException(trim(str_replace($needle, '', $errStr), ' :'));
+        $constants = [];
+        foreach (get_defined_constants() as $key => $value) {
+            if ($value <= $errNo &&
+                $value & $errNo &&
+                strpos($key, 'E_') === 0
+            ) {
+                $constants[] = $key;
+            }
         }
+
+        throw new ConversionException(
+            implode(' | ', $constants) . ' ' .
+            trim(
+                str_replace(
+                    'DOMDocument::loadXML()',
+                    '',
+                    $errStr
+                ),
+                ' :'
+            )
+        );
     }
 
     private function xmlLoader(DOMDocument $xml, string $strXml): DOMDocument
