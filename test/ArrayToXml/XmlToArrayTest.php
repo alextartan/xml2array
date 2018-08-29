@@ -185,4 +185,56 @@ class XmlToArrayTest extends TestCase
             $output
         );
     }
+
+    public function testXmlWithPrefixedNamespacesEnabled()
+    {
+        $doc = new \DOMDocument('1.0', 'UTF-8');
+        $doc->loadXML(
+            implode(
+                '',
+                [
+                    '<root xmlns:h="http://www.w3.org/TR/html4/" xmlns:f="https://www.w3schools.com/furniture">',
+                    '<h:table>',
+                    '<h:tr>',
+                    '<h:td>Apples</h:td>',
+                    '<h:td>Bananas</h:td>',
+                    '</h:tr>',
+                    '</h:table>',
+                    '<f:table>',
+                    '<f:name>African Coffee Table</f:name>',
+                    '<f:width>80</f:width>',
+                    '<f:length>120</f:length>',
+                    '</f:table>',
+                    '</root>',
+                ]
+            )
+        );
+
+        $output = (new XmlToArray(['useNamespaces' => true]))->buildArrayFromDomDocument($doc);
+
+        static::assertSame(
+            [
+                'root' => [
+                    'h:table'     => [
+                        'h:tr' => [
+                            'h:td' => [
+                                'Apples',
+                                'Bananas',
+                            ],
+                        ],
+                    ],
+                    'f:table'     => [
+                        'f:name'   => 'African Coffee Table',
+                        'f:width'  => '80',
+                        'f:length' => '120',
+                    ],
+                    '@attributes' => [
+                        'xmlns:h' => 'http://www.w3.org/TR/html4/',
+                        'xmlns:f' => 'https://www.w3schools.com/furniture',
+                    ],
+                ],
+            ],
+            $output
+        );
+    }
 }
