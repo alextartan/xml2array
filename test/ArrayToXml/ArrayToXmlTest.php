@@ -84,7 +84,7 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    public function testWithAttributes()
+    public function testWithCData()
     {
         $doc           = new \DOMDocument('1.0', 'UTF-8');
         $doc->encoding = 'UTF-8';
@@ -98,13 +98,7 @@ class ArrayToXmlTest extends TestCase
                     '<to>Tove</to>',
                     '<from>Jani</from>',
                     '<heading>Reminder</heading>',
-                    '<body>Don\'t forget me this weekend!</body>',
-                    '</note>',
-                    '<note id="502">',
-                    '<to>Jani</to>',
-                    '<from>Tove</from>',
-                    '<heading>Re: Reminder</heading>',
-                    '<body>I will not</body>',
+                    '<body><![CDATA[I can use double dashes as much as I want (along with <, &, \', and ")]]></body>',
                     '</note>',
                     '</messages>',
                 ]
@@ -122,16 +116,9 @@ class ArrayToXmlTest extends TestCase
                             'to'          => 'Tove',
                             'from'        => 'Jani',
                             'heading'     => 'Reminder',
-                            'body'        => 'Don\'t forget me this weekend!',
-                        ],
-                        [
-                            '@attributes' => [
-                                'id' => '502',
+                            'body'        => [
+                                '@cdata' => 'I can use double dashes as much as I want (along with <, &, \', and ")',
                             ],
-                            'to'          => 'Jani',
-                            'from'        => 'Tove',
-                            'heading'     => 'Re: Reminder',
-                            'body'        => 'I will not',
                         ],
                     ],
                 ],
