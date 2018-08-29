@@ -41,13 +41,6 @@ class ArrayToXmlTest extends TestCase
      */
     public function testSimpleConversionFromStringFailsOnMultipleRootNodes()
     {
-        $doc           = new \DOMDocument('1.0', 'UTF-8');
-        $doc->encoding = 'UTF-8';
-        $doc->loadXML(
-            '<?xml version="1.0" encoding="UTF-8"?>' .
-            '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Body node</body></note>'
-        );
-
         (new ArrayToXml())->buildXml(
             [
                 'note'           => [
@@ -203,6 +196,48 @@ class ArrayToXmlTest extends TestCase
         static::assertSame(
             $doc->saveXML(),
             $output->saveXML()
+        );
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Illegal character in tag name. tag: !WOW in node: note
+     */
+    public function testInvalidNodeName()
+    {
+        (new ArrayToXml)->buildXml(
+            [
+                'messages' => [
+                    'note' => [
+                        [
+                            '!WOW' => 'Tove',
+                        ],
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Illegal character in attribute name. attribute: !id in node: note
+     */
+    public function testInvalidNodeNameInAttributes()
+    {
+        $output = (new ArrayToXml)->buildXml(
+            [
+                'messages' => [
+                    'note' => [
+                        [
+
+                            '@attributes' => [
+                                '!id' => '501',
+                            ],
+                            'WOW'         => 'Tove',
+                        ],
+                    ],
+                ],
+            ]
         );
     }
 }

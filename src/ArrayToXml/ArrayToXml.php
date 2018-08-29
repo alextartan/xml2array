@@ -108,7 +108,7 @@ final class ArrayToXml
         foreach ($array as $key => $value) {
             if (!$this->isValidTagName($key)) {
                 throw new \Exception(
-                    '[Array2XML] Illegal character in tag name. tag: ' . $key . ' in node: ' . $nodeName
+                    'Illegal character in tag name. tag: ' . $key . ' in node: ' . $nodeName
                 );
             }
             if (is_array($value) && is_numeric(key($value))) {
@@ -132,7 +132,7 @@ final class ArrayToXml
             foreach ($array['@attributes'] as $key => $value) {
                 if (!$this->isValidTagName($key)) {
                     throw new \InvalidArgumentException(
-                        '[Array2XML] Illegal character in attribute name. attribute: ' . $key . ' in node: ' . $nodeName
+                        'Illegal character in attribute name. attribute: ' . $key . ' in node: ' . $nodeName
                     );
                 }
                 $node->setAttribute($key, $this->bool2str($value));
