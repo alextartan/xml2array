@@ -237,4 +237,49 @@ class XmlToArrayTest extends TestCase
             $output
         );
     }
+
+    public function testXmlWithNodesHavingAttributes()
+    {
+        $doc = new \DOMDocument('1.0', 'UTF-8');
+        $doc->loadXML(
+            implode(
+                '',
+                [
+                    '<table>',
+                    '<name id="1">African Coffee Table</name>',
+                    '<width id="2">80</width>',
+                    '<length id="3">120</length>',
+                    '</table>',
+                ]
+            )
+        );
+
+        $output = (new XmlToArray(['useNamespaces' => true]))->buildArrayFromDomDocument($doc);
+
+        static::assertSame(
+            [
+                'table' => [
+                    'name'   => [
+                        '@value'      => 'African Coffee Table',
+                        '@attributes' => [
+                            'id' => '1',
+                        ],
+                    ],
+                    'width'  => [
+                        '@value'      => '80',
+                        '@attributes' => [
+                            'id' => '2',
+                        ],
+                    ],
+                    'length' => [
+                        '@value'      => '120',
+                        '@attributes' => [
+                            'id' => '3',
+                        ],
+                    ],
+                ],
+            ],
+            $output
+        );
+    }
 }
