@@ -224,7 +224,7 @@ class ArrayToXmlTest extends TestCase
      */
     public function testInvalidNodeNameInAttributes()
     {
-        $output = (new ArrayToXml)->buildXml(
+        (new ArrayToXml)->buildXml(
             [
                 'messages' => [
                     'note' => [
@@ -238,6 +238,51 @@ class ArrayToXmlTest extends TestCase
                     ],
                 ],
             ]
+        );
+    }
+
+    public function testBool2Str()
+    {
+        $doc           = new \DOMDocument('1.0', 'UTF-8');
+        $doc->encoding = 'UTF-8';
+        $doc->loadXML(
+            implode(
+                '',
+                [
+                    '<?xml version="1.0" encoding="UTF-8"?>',
+                    '<messages>',
+                    '<note id="501">',
+                    'test',
+                    '<to>Tove</to>',
+                    '<from>true</from>',
+                    '<heading>false</heading>',
+                    '</note>',
+                    '</messages>',
+                ]
+            )
+        );
+
+        $output = (new ArrayToXml)->buildXml(
+            [
+                'messages' => [
+                    'note' => [
+                        [
+                            '@attributes' => [
+                                'id' => '501',
+                            ],
+                            '@value'      => 'test',
+                            'to'          => 'Tove',
+                            'from'        => true,
+                            'heading'     => false
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        static::assertSame(
+            $doc->saveXML(),
+            $output->saveXML()
         );
     }
 }

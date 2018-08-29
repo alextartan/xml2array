@@ -87,7 +87,7 @@ final class ArrayToXml
         } else {
             // after we are done with all the keys in the array (if it is one)
             // we check if it has any text value, if yes, append it.
-            $this->convertString($node, $data);
+            $this->convertString($node, $this->bool2str($data));
         }
 
         return $node;
@@ -95,7 +95,7 @@ final class ArrayToXml
 
     private function convertString(DOMElement $node, string $string)
     {
-        $node->appendChild($this->xml->createTextNode($this->bool2str($string)));
+        $node->appendChild($this->xml->createTextNode($string));
     }
 
     private function convertArray(DOMElement $node, string $nodeName, array $array)
