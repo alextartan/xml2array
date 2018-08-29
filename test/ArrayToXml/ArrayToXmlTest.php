@@ -35,6 +35,32 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Xml needs to have one root element
+     */
+    public function testSimpleConversionFromStringFailsOnMultipleRootNodes()
+    {
+        $doc           = new \DOMDocument('1.0', 'UTF-8');
+        $doc->encoding = 'UTF-8';
+        $doc->loadXML(
+            '<?xml version="1.0" encoding="UTF-8"?>' .
+            '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Body node</body></note>'
+        );
+
+        (new ArrayToXml())->buildXml(
+            [
+                'note'           => [
+                    'to'      => 'Tove',
+                    'from'    => 'Jani',
+                    'heading' => 'Reminder',
+                    'body'    => 'Body node',
+                ],
+                'duplicate_root' => 'yes',
+            ]
+        );
+    }
+
     public function testSimpleConversionFromDomDocument()
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
