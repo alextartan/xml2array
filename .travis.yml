@@ -6,26 +6,23 @@ cache:
   directories:
   - $HOME/.composer/cache
 
-env:
-  global:
-  - COMPOSER_ARGS="--no-interaction"
-  - COVERAGE_DEPS="satooshi/php-coveralls"
-  - LEGACY_DEPS="phpunit/phpunit"
-
 matrix:
   include:
-  - php: 7
+  - php: 7.0
     env:
     - CS_CHECK=true
     - TEST_COVERAGE=true
+  - php: 7.1
+    env:
+    - CS_CHECK=false
+    - TEST_COVERAGE=false
 
 before_install:
 - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
 - travis_retry composer self-update
 
 install:
-- travis_retry composer install $COMPOSER_ARGS --ignore-platform-reqs
-- if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev $COMPOSER_ARGS $COVERAGE_DEPS ; fi
+- travis_retry composer install --no-interaction --ignore-platform-reqs
 - stty cols 120
 - export COLUMNS=120
 - composer show

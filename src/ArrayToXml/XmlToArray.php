@@ -21,7 +21,7 @@ final class XmlToArray
     /** @var array */
     private $config;
 
-    /** @var DOMDocument*/
+    /** @var DOMDocument */
     private $xml;
 
     /** @var array The working list of XML namespaces */
@@ -116,10 +116,11 @@ final class XmlToArray
             case XML_ELEMENT_NODE:
                 // for each child node, call the covert function recursively
                 for ($i = 0, $m = $node->childNodes->length; $i < $m; $i++) {
+                    /** @var DOMNode $child */
                     $child = $node->childNodes->item($i);
                     $value = $this->convert($child);
-                    /** @noinspection UnSafeIsSetOverArrayInspection */
-                    if (isset($child->tagName)) {
+
+                    if ($child instanceof \DOMElement) {
                         $temp = $child->nodeName;
 
                         // assume more nodes of same kind are coming
