@@ -91,6 +91,7 @@ final class XmlToArray
     {
         // Convert the XML to an array, starting with the root node
         $docNodeName         = $this->xml->documentElement->nodeName;
+        $array               = [];
         $array[$docNodeName] = $this->convert($this->xml->documentElement);
 
         // Add namespace information to the root node
