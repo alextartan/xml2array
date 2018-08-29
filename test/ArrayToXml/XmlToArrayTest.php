@@ -122,4 +122,67 @@ class XmlToArrayTest extends TestCase
             $output
         );
     }
+
+    public function testXmlWithNamespacesButNotEnabled()
+    {
+        $doc = new \DOMDocument('1.0', 'UTF-8');
+        $doc->loadXML(
+            implode(
+                '',
+                [
+                    '<table xmlns="https://www.w3schools.com/furniture">',
+                    '<name>African Coffee Table</name>',
+                    '<width>80</width>',
+                    '<length>120</length>',
+                    '</table>',
+                ]
+            )
+        );
+
+        $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
+
+        static::assertSame(
+            [
+                'table' => [
+                    'name'   => 'African Coffee Table',
+                    'width'  => '80',
+                    'length' => '120',
+                ],
+            ],
+            $output
+        );
+    }
+
+    public function testXmlWithNamespacesEnabled()
+    {
+        $doc = new \DOMDocument('1.0', 'UTF-8');
+        $doc->loadXML(
+            implode(
+                '',
+                [
+                    '<table xmlns="https://www.w3schools.com/furniture">',
+                    '<name>African Coffee Table</name>',
+                    '<width>80</width>',
+                    '<length>120</length>',
+                    '</table>',
+                ]
+            )
+        );
+
+        $output = (new XmlToArray(['useNamespaces' => true]))->buildArrayFromDomDocument($doc);
+
+        static::assertSame(
+            [
+                'table' => [
+                    'name'        => 'African Coffee Table',
+                    'width'       => '80',
+                    'length'      => '120',
+                    '@attributes' => [
+                        'xmlns' => 'https://www.w3schools.com/furniture',
+                    ],
+                ],
+            ],
+            $output
+        );
+    }
 }
