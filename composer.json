@@ -40,9 +40,9 @@
       "@cs-check",
       "@test"
     ],
-    "cs-check": "phpcs",
-    "cs-fix": "phpcbf",
-    "test": "phpunit --colors=always",
+    "cs-check": "vendor/bin/phpcs",
+    "cs-fix": "vendor/bin/phpcbf",
+    "test": "vendor/bin/phpunit --colors=always",
     "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
     "upload-coverage": "vendor/bin/php-coveralls -v"
   }

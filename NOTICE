@@ -1,0 +1,15 @@
+alextartan/xml2array
+
+Copyright 2018 AlexTartan. All Rights Reserved.
+
+This product includes software developed by AlexTartan (https://web-factory.co).
+
+This software contains code derived from the XML2Array (v0.3) and Array2XML (v0.9)
+packages developed by Lalit Patel, including various modifications by Verdant
+Industries, RentPost Inc and Michael Rusca
+
+Portions of this software were developed by various contributors, who retain copyright
+on their work. These works are licensed to AlexTartan.
+
+alextartan/xml2array is available under the Apache 2.0 license. See LICENSE for more
+information.

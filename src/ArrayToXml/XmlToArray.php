@@ -1,6 +1,22 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Copyright 2018-present AlexTartan. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/
+
 namespace RedLine\Array2Xml;
 
 use DOMDocument;
@@ -97,7 +113,7 @@ final class XmlToArray
     /**
      * Convert an XML DOMDocument (or part thereof) to an array
      *
-     * @return array|string
+     * @return string[]|string
      */
     private function convert(DOMNode $node)
     {
@@ -115,9 +131,8 @@ final class XmlToArray
 
             case XML_ELEMENT_NODE:
                 // for each child node, call the covert function recursively
-                for ($i = 0, $m = $node->childNodes->length; $i < $m; $i++) {
+                foreach ($node->childNodes as $child) {
                     /** @var DOMNode $child */
-                    $child = $node->childNodes->item($i);
                     $value = $this->convert($child);
 
                     if ($child instanceof \DOMElement) {
@@ -134,35 +149,69 @@ final class XmlToArray
                     }
                 }
 
-                if (is_array($output)) {
-                    // if only one node of its kind, assign it directly instead if array($value);
-                    foreach ($output as $temp => $value) {
-                        if (is_array($value) && count($value) === 1) {
-                            $output[$temp] = $value[0];
-                        }
-                    }
-                    if (empty($output)) {
-                        //for empty nodes
-                        $output = '';
-                    }
-                }
+                $output = $this->normalizeValues($output);
 
-                // loop through the attributes and collect them
-                if ($node->attributes->length) {
-                    $attribute = [];
-                    foreach ($node->attributes as $attributeName => $attributeNode) {
-                        $attributeName             = $attributeNode->nodeName;
-                        $attribute[$attributeName] = (string)$attributeNode->value;
-                        $this->collateNamespaces($attributeNode);
-                    }
-                    // if its an leaf node, store the value in @value instead of directly storing it.
-                    if (!is_array($output)) {
-                        $output = [$this->config['valueKey'] => $output];
-                    }
-                    $output[$this->config['attributesKey']] = $attribute;
-                }
+                $output = $this->collectAttributes($node, $output);
+
                 break;
         }
+
+        return $output;
+    }
+
+    /**
+     * Normalize 1-item array values and empty nodes
+     *
+     * @param array|string $output
+     *
+     * @return array|string
+     */
+    private function normalizeValues($output)
+    {
+        if (!is_array($output)) {
+            return $output;
+        }
+
+        // if only one node of its kind, assign it directly instead if array($value);
+        foreach ($output as $key => $value) {
+            if (is_array($value) && count($value) === 1) {
+                $output[$key] = $value[0];
+            }
+        }
+        if (empty($output)) {
+            //for empty nodes
+            $output = '';
+        }
+
+        return $output;
+    }
+
+    /**
+     * Loop through the attributes and collect them
+     *
+     * @param DOMNode      $node
+     * @param array|string $output
+     *
+     * @return array|string
+     */
+    private function collectAttributes(DOMNode $node, $output)
+    {
+        if (!$node->attributes->length) {
+            return $output;
+        }
+
+        $attribute = [];
+        foreach ($node->attributes as $attributeName => $attributeNode) {
+            $attributeName             = $attributeNode->nodeName;
+            $attribute[$attributeName] = (string)$attributeNode->value;
+            $this->collateNamespaces($attributeNode);
+        }
+
+        // if its a leaf node, store the value in @value instead of directly it.
+        if (!is_array($output)) {
+            $output = [$this->config['valueKey'] => $output];
+        }
+        $output[$this->config['attributesKey']] = $attribute;
 
         return $output;
     }
