@@ -130,24 +130,7 @@ final class XmlToArray
                 break;
 
             case XML_ELEMENT_NODE:
-                // for each child node, call the covert function recursively
-                foreach ($node->childNodes as $child) {
-                    /** @var DOMNode $child */
-                    $value = $this->convert($child);
-
-                    if ($child instanceof \DOMElement) {
-                        $temp = $child->nodeName;
-
-                        // assume more nodes of same kind are coming
-                        if (!isset($output[$temp])) {
-                            $output[$temp] = [];
-                        }
-                        $output[$temp][] = $value;
-                    } elseif ($value !== '') {
-                        //check if it is not an empty text node
-                        $output = $value;
-                    }
-                }
+                $output = $this->loopNodeChildren($node, $output);
 
                 $output = $this->normalizeValues($output);
 
@@ -160,11 +143,42 @@ final class XmlToArray
     }
 
     /**
-     * Normalize 1-item array values and empty nodes
+     * For each child node, call the covert function recursively
      *
+     * @param DOMNode      $node
      * @param array|string $output
      *
-     * @return array|string
+     * @return string|string[]
+     */
+    private function loopNodeChildren(DOMNode $node, $output)
+    {
+        foreach ($node->childNodes as $child) {
+            /** @var DOMNode $child */
+            $value = $this->convert($child);
+
+            if ($child instanceof \DOMElement) {
+                $temp = $child->nodeName;
+
+                // assume more nodes of same kind are coming
+                if (!isset($output[$temp])) {
+                    $output[$temp] = [];
+                }
+                $output[$temp][] = $value;
+            } elseif ($value !== '') {
+                //check if it is not an empty text node
+                $output = $value;
+            }
+        }
+
+        return $output;
+    }
+
+    /**
+     * Normalize 1-item array values and empty nodes
+     *
+     * @param string|string[] $output
+     *
+     * @return string|string[]
      */
     private function normalizeValues($output)
     {
@@ -189,10 +203,10 @@ final class XmlToArray
     /**
      * Loop through the attributes and collect them
      *
-     * @param DOMNode      $node
-     * @param array|string $output
+     * @param DOMNode         $node
+     * @param string|string[] $output
      *
-     * @return array|string
+     * @return string|string[]
      */
     private function collectAttributes(DOMNode $node, $output)
     {
