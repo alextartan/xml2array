@@ -1,9 +1,10 @@
 {
   "name": "alextartan/xml2array",
-  "description": "Convert from XML to array, array to XML. PHP7, 100% unit test coverage, PSR2 compliant",
+  "description": "Lightweight xml<->array conversion.",
   "keywords": [
     "xml",
-    "array"
+    "array",
+    "conversion"
   ],
   "license": "Apache-2.0",
   "type": "library",
