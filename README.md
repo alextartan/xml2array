@@ -1,6 +1,6 @@
 #### Array <-> XML conversion package
 
-Based on Lalit.org's XML2Array and Array2XML classes.
+Lightweight XML parser
 
 Current build status
 ===
