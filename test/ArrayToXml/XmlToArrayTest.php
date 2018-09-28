@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace RedLineTest\Array2Xml;
+namespace AlexTartanTest\Array2Xml;
 
+use AlexTartan\Array2Xml\Exception\ConversionException;
+use AlexTartan\Array2Xml\XmlToArray;
 use PHPUnit\Framework\TestCase;
-use RedLine\Array2Xml\XmlToArray;
 
 class XmlToArrayTest extends TestCase
 {
@@ -68,12 +69,11 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RedLine\Array2Xml\Exception\ConversionException
-     * @expectedExceptionMessage E_WARNING Start tag expected, '<' not found in Entity, line: 1
-     */
     public function testBuildFromStringThrowsExceptionOnInvalidXml()
     {
+        $this->expectException(ConversionException::class);
+        $this->expectExceptionMessage("E_WARNING Start tag expected, '<' not found in Entity, line: 1");
+
         $output = (new XmlToArray())->buildArrayFromString(
             'no_xml'
         );
@@ -304,9 +304,9 @@ class XmlToArrayTest extends TestCase
         static::assertSame(
             [
                 'table' => [
-                    'name'        => '',
-                    'width'       => '80',
-                    'length'      => '120',
+                    'name'   => '',
+                    'width'  => '80',
+                    'length' => '120',
                 ],
             ],
             $output

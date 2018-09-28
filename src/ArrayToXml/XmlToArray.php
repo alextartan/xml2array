@@ -17,11 +17,11 @@ declare(strict_types=1);
  * limitations under the License.
  **/
 
-namespace RedLine\Array2Xml;
+namespace AlexTartan\Array2Xml;
 
 use DOMDocument;
 use DOMNode;
-use RedLine\Array2Xml\Exception\ConversionException;
+use AlexTartan\Array2Xml\Exception\ConversionException;
 
 /**
  * This class helps convert an XML to an array

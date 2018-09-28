@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace RedLineTest\Array2Xml;
+namespace AlexTartanTest\Array2Xml;
 
+use AlexTartan\Array2Xml\ArrayToXml;
+use AlexTartan\Array2Xml\Exception\ConversionException;
+use AlexTartan\Array2Xml\XmlToArray;
 use PHPUnit\Framework\TestCase;
-use RedLine\Array2Xml\ArrayToXml;
-use RedLine\Array2Xml\XmlToArray;
 
 class ArrayToXmlTest extends TestCase
 {
@@ -35,12 +36,11 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RedLine\Array2Xml\Exception\ConversionException
-     * @expectedExceptionMessage Xml needs to have one root element
-     */
     public function testSimpleConversionFromStringFailsOnMultipleRootNodes()
     {
+        $this->expectException(ConversionException::class);
+        $this->expectExceptionMessage('Xml needs to have one root element');
+
         (new ArrayToXml())->buildXml(
             [
                 'note'           => [
@@ -199,12 +199,11 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RedLine\Array2Xml\Exception\ConversionException
-     * @expectedExceptionMessage Illegal character in tag name. tag: !WOW in node: note
-     */
     public function testInvalidNodeName()
     {
+        $this->expectException(ConversionException::class);
+        $this->expectExceptionMessage('Illegal character in tag name. tag: !WOW in node: note');
+
         (new ArrayToXml)->buildXml(
             [
                 'messages' => [
@@ -218,12 +217,11 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \RedLine\Array2Xml\Exception\ConversionException
-     * @expectedExceptionMessage Illegal character in attribute name. attribute: !id in node: note
-     */
     public function testInvalidNodeNameInAttributes()
     {
+        $this->expectException(ConversionException::class);
+        $this->expectExceptionMessage('Illegal character in attribute name. attribute: !id in node: note');
+
         (new ArrayToXml)->buildXml(
             [
                 'messages' => [

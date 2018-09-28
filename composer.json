@@ -23,7 +23,7 @@
   },
   "autoload": {
     "psr-4": {
-      "RedLine\\Array2Xml\\": "src/ArrayToXml"
+      "AlexTartan\\Array2Xml\\": "src/ArrayToXml"
     }
   },
   "require-dev": {
@@ -33,7 +33,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "RedLineTest\\Array2Xml\\": "test/ArrayToXml"
+      "AlexTartanTest\\Array2Xml\\": "test/ArrayToXml"
     }
   },
   "scripts": {
