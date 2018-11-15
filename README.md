@@ -5,8 +5,11 @@ Lightweight XML parser
 Current build status
 ===
 
-[![Build Status](https://travis-ci.org/alextartan/xml2array.svg?branch=master)](https://travis-ci.org/alextartan/xml2array) [![Coverage Status](https://coveralls.io/repos/github/alextartan/xml2array/badge.svg?branch=master)](https://coveralls.io/github/alextartan/xml2array?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alextartan/xml2array/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/alextartan/xml2array/?branch=master)
-
+[![Build Status](https://travis-ci.org/alextartan/xml2array.svg?branch=master)](https://travis-ci.org/alextartan/xml2array)
+[![Coverage Status](https://coveralls.io/repos/github/alextartan/xml2array/badge.svg?branch=master)](https://coveralls.io/github/alextartan/xml2array?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alextartan/xml2array/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/alextartan/xml2array/?branch=master)
+[![Packagist](https://img.shields.io/badge/Packagist-alextartan%2Fxml2array-blue.svg)](https://packagist.org/packages/alextartan/xml2array)
+[![Downloads](https://img.shields.io/badge/dynamic/json.svg?url=https://repo.packagist.org/packages/alextartan/xml2array.json&label=Downloads&query=$.package.downloads.total&colorB=orange)](https://packagist.org/packages/alextartan/xml2array)
 Install
 ===
 

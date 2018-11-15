@@ -1,6 +1,6 @@
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
     <testsuites>
-        <testsuite name="RedLine\ArrayToXml Tests">
+        <testsuite name="AlexTartan\ArrayToXml Tests">
             <directory>./test</directory>
         </testsuite>
     </testsuites>
