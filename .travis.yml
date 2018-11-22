@@ -16,6 +16,10 @@ matrix:
     env:
     - CS_CHECK=false
     - TEST_COVERAGE=false
+  - php: 7.2
+    env:
+    - CS_CHECK=false
+    - TEST_COVERAGE=false
 
 before_install:
 - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
