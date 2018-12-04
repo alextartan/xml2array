@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace AlexTartanTest\Array2Xml\Exception;
 
-use PHPUnit\Framework\TestCase;
 use AlexTartan\Array2Xml\Exception\ConversionException;
+use PHPUnit\Framework\TestCase;
 
 class ConversionExceptionTest extends TestCase
 {
-    public function testCorrectType()
+    public function testCorrectType(): void
     {
-        $exception = new ConversionException('someText');
+        $msg       = 'someText';
+        $exception = new ConversionException($msg);
 
-        static::assertInstanceOf(\Exception::class, $exception);
+        static::assertSame($msg, $exception->getMessage());
     }
 }

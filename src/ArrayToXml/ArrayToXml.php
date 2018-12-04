@@ -19,10 +19,10 @@ declare(strict_types=1);
 
 namespace AlexTartan\Array2Xml;
 
+use AlexTartan\Array2Xml\Exception\ConversionException;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
-use AlexTartan\Array2Xml\Exception\ConversionException;
 
 /**
  * This class converts an array into an XML file
@@ -108,12 +108,12 @@ final class ArrayToXml
         return $node;
     }
 
-    private function convertString(DOMElement $node, string $string)
+    private function convertString(DOMElement $node, string $string): void
     {
         $node->appendChild($this->xml->createTextNode($string));
     }
 
-    private function convertArray(DOMElement $node, string $nodeName, array $array)
+    private function convertArray(DOMElement $node, string $nodeName, array $array): void
     {
         $array = $this->parseAttributes($node, $nodeName, $array);
         $array = $this->parseValue($node, $array);
@@ -189,6 +189,6 @@ final class ArrayToXml
     {
         $pattern = '/^[a-z_]+[a-z0-9\:\-\.\_]*[^:]*$/i';
 
-        return preg_match($pattern, $tag, $matches) && $matches[0] === $tag;
+        return (bool)preg_match($pattern, $tag, $matches) && $matches[0] === $tag;
     }
 }

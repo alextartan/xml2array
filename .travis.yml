@@ -8,18 +8,16 @@ cache:
 
 matrix:
   include:
-  - php: 7.0
+  - php: 7.2
     env:
     - CS_CHECK=true
     - TEST_COVERAGE=true
-  - php: 7.1
+    - PHPSTAN=true
+  - php: 7.3
     env:
     - CS_CHECK=false
     - TEST_COVERAGE=false
-  - php: 7.2
-    env:
-    - CS_CHECK=false
-    - TEST_COVERAGE=false
+    - PHPSTAN=false
 
 before_install:
 - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
@@ -34,6 +32,7 @@ install:
 script:
 - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
 - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
+- if [[ $PHPSTAN == 'true' ]]; then composer phpstan ; fi
 
 after_script:
 - if [[ $TEST_COVERAGE == 'true' ]]; then composer upload-coverage ; fi

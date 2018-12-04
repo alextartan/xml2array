@@ -19,9 +19,9 @@ declare(strict_types=1);
 
 namespace AlexTartan\Array2Xml;
 
+use AlexTartan\Array2Xml\Exception\ConversionException;
 use DOMDocument;
 use DOMNode;
-use AlexTartan\Array2Xml\Exception\ConversionException;
 
 /**
  * This class helps convert an XML to an array
@@ -29,10 +29,10 @@ use AlexTartan\Array2Xml\Exception\ConversionException;
 final class XmlToArray
 {
     /** The name of the XML attribute that indicates a namespace definition*/
-    const ATTRIBUTE_NAMESPACE = 'xmlns';
+    private const ATTRIBUTE_NAMESPACE = 'xmlns';
 
     /** The string that separates the namespace attribute from the prefix for the namespace*/
-    const ATTRIBUTE_NAMESPACE_SEPARATOR = ':';
+    private const ATTRIBUTE_NAMESPACE_SEPARATOR = ':';
 
     /** @var array */
     private $config;
@@ -95,12 +95,12 @@ final class XmlToArray
         $array[$docNodeName] = $this->convert($this->xml->documentElement);
 
         // Add namespace information to the root node
-        if (!empty($this->namespaces)) {
+        if (count($this->namespaces) > 0) {
             if (!isset($array[$docNodeName][$this->config['attributesKey']])) {
                 $array[$docNodeName][$this->config['attributesKey']] = [];
             }
             foreach ($this->namespaces as $uri => $prefix) {
-                if ($prefix) {
+                if ((string)$prefix !== '') {
                     $prefix = self::ATTRIBUTE_NAMESPACE_SEPARATOR . $prefix;
                 }
                 $array[$docNodeName][$this->config['attributesKey']][self::ATTRIBUTE_NAMESPACE . $prefix] = $uri;
@@ -113,7 +113,7 @@ final class XmlToArray
     /**
      * Convert an XML DOMDocument (or part thereof) to an array
      *
-     * @return string[]|string
+     * @return string|string[]|string[][]
      */
     private function convert(DOMNode $node)
     {
@@ -145,12 +145,12 @@ final class XmlToArray
     /**
      * For each child node, call the covert function recursively
      *
-     * @param DOMNode      $node
-     * @param array|string $output
+     * @param DOMNode             $node
+     * @param string[]|string[][] $output
      *
-     * @return string|string[]
+     * @return string|string[]|string[][]
      */
-    private function loopNodeChildren(DOMNode $node, $output)
+    private function loopNodeChildren(DOMNode $node, array $output)
     {
         foreach ($node->childNodes as $child) {
             /** @var DOMNode $child */
@@ -164,9 +164,12 @@ final class XmlToArray
                     $output[$temp] = [];
                 }
                 $output[$temp][] = $value;
-            } elseif ($value !== '') {
+            } elseif (
+                (is_string($value) && $value !== '') ||
+                (is_array($value) && count($value) !== 0)
+            ) {
                 //check if it is not an empty text node
-                $output = $value;
+                return $value;
             }
         }
 
@@ -176,9 +179,9 @@ final class XmlToArray
     /**
      * Normalize 1-item array values and empty nodes
      *
-     * @param string|string[] $output
+     * @param string|string[]|string[][] $output
      *
-     * @return string|string[]
+     * @return string|string[]|string[][]
      */
     private function normalizeValues($output)
     {
@@ -192,7 +195,8 @@ final class XmlToArray
                 $output[$key] = $value[0];
             }
         }
-        if (empty($output)) {
+
+        if (count($output) === 0) {
             //for empty nodes
             $output = '';
         }
@@ -203,14 +207,13 @@ final class XmlToArray
     /**
      * Loop through the attributes and collect them
      *
-     * @param DOMNode         $node
-     * @param string|string[] $output
+     * @param string|string[]|string[][] $output
      *
-     * @return string|string[]
+     * @return string|string[]|string[][]
      */
     private function collectAttributes(DOMNode $node, $output)
     {
-        if (!$node->attributes->length) {
+        if ($node->attributes->length === 0) {
             return $output;
         }
 
@@ -232,30 +235,25 @@ final class XmlToArray
 
     /**
      * Get the namespace of the supplied node, and add it to the list of known namespaces for this document
-     *
-     * @param DOMNode $node
-     *
-     * @return void
      */
-    private function collateNamespaces(DOMNode $node)
+    private function collateNamespaces(DOMNode $node): void
     {
-        if ($node->namespaceURI &&
+        if ($node->namespaceURI !== '' &&
+            $node->namespaceURI !== null &&
             !array_key_exists($node->namespaceURI, $this->namespaces) &&
-            $this->config['useNamespaces']
+            $this->config['useNamespaces'] === true
         ) {
             $this->namespaces[$node->namespaceURI] = $node->lookupPrefix($node->namespaceURI);
         }
     }
 
-    /**
-     * @return void
-     */
-    public function handleXmlError(int $errNo, string $errStr)
+    public function handleXmlError(int $errNo, string $errStr): void
     {
         $constants = [];
         foreach (get_defined_constants() as $key => $value) {
-            if ($value <= $errNo &&
-                $value & $errNo &&
+            $numericValue = (int)$value;
+            if ($numericValue <= $errNo &&
+                (bool)($numericValue & $errNo) &&
                 strpos($key, 'E_') === 0
             ) {
                 $constants[] = $key;

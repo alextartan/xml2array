@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class XmlToArrayTest extends TestCase
 {
-    public function testBuildFromString()
+    public function testBuildFromString(): void
     {
         $output = (new XmlToArray())->buildArrayFromString(
             '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Body node</body></note>'
@@ -28,7 +28,7 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    public function testSimpleConversionFromDomDocument()
+    public function testSimpleConversionFromDomDocument(): void
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
         $doc->loadXML(
@@ -50,7 +50,7 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    public function testBuildFromStringWithMultipleNodes()
+    public function testBuildFromStringWithMultipleNodes(): void
     {
         $output = (new XmlToArray())->buildArrayFromString(
             '<note><to>run1</to><to>run2</to></note>'
@@ -69,7 +69,7 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    public function testBuildFromStringThrowsExceptionOnInvalidXml()
+    public function testBuildFromStringThrowsExceptionOnInvalidXml(): void
     {
         $this->expectException(ConversionException::class);
         $this->expectExceptionMessage("E_WARNING Start tag expected, '<' not found in Entity, line: 1");
@@ -91,7 +91,7 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    public function testFromDomDocumentWithCdata()
+    public function testFromDomDocumentWithCdata(): void
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
         $doc->loadXML(
@@ -123,7 +123,7 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    public function testXmlWithNamespacesButNotEnabled()
+    public function testXmlWithNamespacesButNotEnabled(): void
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
         $doc->loadXML(
@@ -153,7 +153,7 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    public function testXmlWithNamespacesEnabled()
+    public function testXmlWithNamespacesEnabled(): void
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
         $doc->loadXML(
@@ -186,7 +186,7 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    public function testXmlWithPrefixedNamespacesEnabled()
+    public function testXmlWithPrefixedNamespacesEnabled(): void
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
         $doc->loadXML(
@@ -238,7 +238,7 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    public function testXmlWithNodesHavingAttributes()
+    public function testXmlWithNodesHavingAttributes(): void
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
         $doc->loadXML(
@@ -283,7 +283,7 @@ class XmlToArrayTest extends TestCase
         );
     }
 
-    public function testXmlWithEmptyNodes()
+    public function testXmlWithEmptyNodes(): void
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
         $doc->loadXML(

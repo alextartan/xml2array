@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class ArrayToXmlTest extends TestCase
 {
-    public function testSimpleConversionFromString()
+    public function testSimpleConversionFromString(): void
     {
         $doc           = new \DOMDocument('1.0', 'UTF-8');
         $doc->encoding = 'UTF-8';
@@ -36,7 +36,7 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    public function testSimpleConversionFromStringFailsOnMultipleRootNodes()
+    public function testSimpleConversionFromStringFailsOnMultipleRootNodes(): void
     {
         $this->expectException(ConversionException::class);
         $this->expectExceptionMessage('Xml needs to have one root element');
@@ -54,7 +54,7 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    public function testSimpleConversionFromDomDocument()
+    public function testSimpleConversionFromDomDocument(): void
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
         $doc->loadXML(
@@ -77,7 +77,7 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    public function testConversionFromStringWithMultipleNodes()
+    public function testConversionFromStringWithMultipleNodes(): void
     {
         $doc           = new \DOMDocument('1.0', 'UTF-8');
         $doc->encoding = 'UTF-8';
@@ -103,7 +103,7 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    public function testWithCData()
+    public function testWithCData(): void
     {
         $doc           = new \DOMDocument('1.0', 'UTF-8');
         $doc->encoding = 'UTF-8';
@@ -150,7 +150,7 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    public function testWithValue()
+    public function testWithValue(): void
     {
         $doc           = new \DOMDocument('1.0', 'UTF-8');
         $doc->encoding = 'UTF-8';
@@ -199,7 +199,7 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    public function testInvalidNodeName()
+    public function testInvalidNodeName(): void
     {
         $this->expectException(ConversionException::class);
         $this->expectExceptionMessage('Illegal character in tag name. tag: !WOW in node: note');
@@ -217,7 +217,7 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    public function testInvalidNodeNameInAttributes()
+    public function testInvalidNodeNameInAttributes(): void
     {
         $this->expectException(ConversionException::class);
         $this->expectExceptionMessage('Illegal character in attribute name. attribute: !id in node: note');
@@ -239,7 +239,7 @@ class ArrayToXmlTest extends TestCase
         );
     }
 
-    public function testBool2Str()
+    public function testBool2Str(): void
     {
         $doc           = new \DOMDocument('1.0', 'UTF-8');
         $doc->encoding = 'UTF-8';
