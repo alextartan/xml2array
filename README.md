@@ -18,8 +18,10 @@ The easiest way is to use `composer`:
 
     composer require alextartan/xml2array
 
-Notes:  
+Notes:
+
 Latest release requires `PHP` >= 7.2 and the `dom` extension (`ext-dom`)
+
 For `PHP` <= 7.2, use version `1.0.2`
 
 
