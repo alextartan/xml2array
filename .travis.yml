@@ -19,6 +19,7 @@ matrix:
     - TEST_COVERAGE=false
     - PHPSTAN=false
   - php: nightly
+    env:
     - CS_CHECK=false
     - TEST_COVERAGE=false
     - PHPSTAN=false
