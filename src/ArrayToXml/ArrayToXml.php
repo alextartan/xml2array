@@ -41,7 +41,7 @@ final class ArrayToXml
         $this->config = ArrayToXmlConfig::fromArray($config);
 
         $this->xml               = new DomDocument($this->config->getVersion(), $this->config->getEncoding());
-        $this->xml->formatOutput =$this->config->isFormatOutput();
+        $this->xml->formatOutput = $this->config->isFormatOutput();
     }
 
     public function buildXml(array $data): DOMDocument
