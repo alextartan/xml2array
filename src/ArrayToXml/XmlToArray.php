@@ -22,6 +22,7 @@ namespace AlexTartan\Array2Xml;
 use AlexTartan\Array2Xml\Exception\ConversionException;
 use DOMDocument;
 use DOMNode;
+use LibXMLError;
 
 /**
  * This class helps convert an XML to an array
@@ -34,7 +35,7 @@ final class XmlToArray
     /** The string that separates the namespace attribute from the prefix for the namespace*/
     private const ATTRIBUTE_NAMESPACE_SEPARATOR = ':';
 
-    /** @var array */
+    /** @var XmlToArrayConfig */
     private $config;
 
     /** @var DOMDocument */
@@ -45,17 +46,7 @@ final class XmlToArray
 
     public function __construct(array $config = [])
     {
-        $this->config = array_merge(
-            [
-                'version'       => '1.0',
-                'encoding'      => 'UTF-8',
-                'attributesKey' => '@attributes',
-                'cdataKey'      => '@cdata',
-                'valueKey'      => '@value',
-                'useNamespaces' => false,
-            ],
-            $config
-        );
+        $this->config = XmlToArrayConfig::fromArray($config);
     }
 
     /**
@@ -67,7 +58,7 @@ final class XmlToArray
      */
     public function buildArrayFromString(string $inputXml): array
     {
-        $this->xml = new DOMDocument($this->config['version'], $this->config['encoding']);
+        $this->xml = new DOMDocument($this->config->getVersion(), $this->config->getEncoding());
         $this->xmlLoader($this->xml, $inputXml);
 
         return $this->extractArray();
@@ -94,16 +85,18 @@ final class XmlToArray
         $array               = [];
         $array[$docNodeName] = $this->convert($this->xml->documentElement);
 
+        $attributesKey = $this->config->getAttributesKey();
+
         // Add namespace information to the root node
         if (count($this->namespaces) > 0) {
-            if (!isset($array[$docNodeName][$this->config['attributesKey']])) {
-                $array[$docNodeName][$this->config['attributesKey']] = [];
+            if (!isset($array[$docNodeName][$attributesKey])) {
+                $array[$docNodeName][$attributesKey] = [];
             }
             foreach ($this->namespaces as $uri => $prefix) {
                 if ((string)$prefix !== '') {
                     $prefix = self::ATTRIBUTE_NAMESPACE_SEPARATOR . $prefix;
                 }
-                $array[$docNodeName][$this->config['attributesKey']][self::ATTRIBUTE_NAMESPACE . $prefix] = $uri;
+                $array[$docNodeName][$attributesKey][self::ATTRIBUTE_NAMESPACE . $prefix] = $uri;
             }
         }
 
@@ -122,7 +115,7 @@ final class XmlToArray
         $this->collateNamespaces($node);
         switch ($node->nodeType) {
             case XML_CDATA_SECTION_NODE:
-                $output[$this->config['cdataKey']] = trim($node->textContent);
+                $output[$this->config->getCdataKey()] = trim($node->textContent);
                 break;
 
             case XML_TEXT_NODE:
@@ -224,9 +217,9 @@ final class XmlToArray
 
         // if its a leaf node, store the value in @value instead of directly it.
         if (!is_array($output)) {
-            $output = [$this->config['valueKey'] => $output];
+            $output = [$this->config->getValueKey() => $output];
         }
-        $output[$this->config['attributesKey']] = $attribute;
+        $output[$this->config->getAttributesKey()] = $attribute;
 
         return $output;
     }
@@ -239,43 +232,22 @@ final class XmlToArray
         if ($node->namespaceURI !== '' &&
             $node->namespaceURI !== null &&
             !array_key_exists($node->namespaceURI, $this->namespaces) &&
-            $this->config['useNamespaces'] === true
+            $this->config->isUseNamespaces()
         ) {
             $this->namespaces[$node->namespaceURI] = $node->lookupPrefix($node->namespaceURI);
         }
     }
 
-    public function handleXmlError(int $errNo, string $errStr): void
-    {
-        $constants = [];
-        foreach (get_defined_constants() as $key => $value) {
-            $numericValue = (int)$value;
-            if ($numericValue <= $errNo &&
-                (bool)($numericValue & $errNo) &&
-                strpos($key, 'E_') === 0
-            ) {
-                $constants[] = $key;
-            }
-        }
-
-        throw new ConversionException(
-            implode(' | ', $constants) . ' ' .
-            trim(
-                str_replace(
-                    'DOMDocument::loadXML()',
-                    '',
-                    $errStr
-                ),
-                ' :'
-            )
-        );
-    }
-
     private function xmlLoader(DOMDocument $xml, string $strXml): DOMDocument
     {
-        set_error_handler([$this, 'handleXmlError']);
+        libxml_use_internal_errors(true);
         $xml->loadXML($strXml);
-        restore_error_handler();
+        $firstError = libxml_get_last_error();
+        libxml_clear_errors();
+
+        if ($firstError instanceof LibXMLError) {
+            throw new ConversionException($firstError->message);
+        }
 
         return $xml;
     }

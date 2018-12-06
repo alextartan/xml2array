@@ -19,7 +19,8 @@
   ],
   "require": {
     "php": ">=7.2",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "ext-libxml": "*"
   },
   "autoload": {
     "psr-4": {

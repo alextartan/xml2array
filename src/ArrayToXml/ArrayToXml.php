@@ -32,26 +32,16 @@ final class ArrayToXml
     /** @var DOMDocument */
     private $xml;
 
-    /** @var array */
+    /** @var ArrayToXmlConfig */
     private $config;
 
     public function __construct(array $config = [])
     {
         // string $version = '1.0', string $encoding = 'UTF-8', bool $formatOutput = false
-        $this->config = array_merge(
-            [
-                'version'       => '1.0',
-                'encoding'      => 'UTF-8',
-                'attributesKey' => '@attributes',
-                'cdataKey'      => '@cdata',
-                'valueKey'      => '@value',
-                'formatOutput'  => false,
-            ],
-            $config
-        );
+        $this->config = ArrayToXmlConfig::fromArray($config);
 
-        $this->xml               = new DomDocument((string)$this->config['version'], $this->config['encoding']);
-        $this->xml->formatOutput = (bool)$this->config['formatOutput'];
+        $this->xml               = new DomDocument($this->config->getVersion(), $this->config->getEncoding());
+        $this->xml->formatOutput =$this->config->isFormatOutput();
     }
 
     public function buildXml(array $data): DOMDocument
@@ -135,7 +125,7 @@ final class ArrayToXml
 
     private function parseAttributes(DOMElement $node, string $nodeName, array $array): array
     {
-        $attributesKey = $this->config['attributesKey'];
+        $attributesKey = $this->config->getAttributesKey();
 
         if (array_key_exists($attributesKey, $array) && is_array($array[$attributesKey])) {
             foreach ($array[$attributesKey] as $key => $value) {
@@ -154,7 +144,7 @@ final class ArrayToXml
 
     private function parseValue(DOMElement $node, array $array): array
     {
-        $valueKey = $this->config['valueKey'];
+        $valueKey = $this->config->getValueKey();
 
         if (array_key_exists($valueKey, $array)) {
             $node->appendChild($this->xml->createTextNode($this->bool2str($array[$valueKey])));
@@ -167,7 +157,7 @@ final class ArrayToXml
 
     private function parseCdata(DOMElement $node, array $array): array
     {
-        $cdataKey = $this->config['cdataKey'];
+        $cdataKey = $this->config->getCdataKey();
 
         if (array_key_exists($cdataKey, $array)) {
             $node->appendChild($this->xml->createCDATASection($this->bool2str($array[$cdataKey])));

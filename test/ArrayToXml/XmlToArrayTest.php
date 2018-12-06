@@ -72,7 +72,7 @@ final class XmlToArrayTest extends TestCase
     public function testBuildFromStringThrowsExceptionOnInvalidXml(): void
     {
         $this->expectException(ConversionException::class);
-        $this->expectExceptionMessage("E_WARNING Start tag expected, '<' not found in Entity, line: 1");
+        $this->expectExceptionMessage("Start tag expected, '<' not found");
 
         $output = (new XmlToArray())->buildArrayFromString(
             'no_xml'
