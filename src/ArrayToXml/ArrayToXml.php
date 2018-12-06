@@ -70,7 +70,7 @@ final class ArrayToXml
     /**
      * Get string representation of boolean value.
      *
-     * @param mixed $value
+     * @param bool|string|int $value
      */
     private function bool2str($value): string
     {
@@ -90,10 +90,6 @@ final class ArrayToXml
      *
      * @param string       $nodeName - name of the root node to be converted
      * @param array|string $data     - array to be converted
-     *
-     * @return DOMNode
-     *
-     * @throws \InvalidArgumentException
      */
     private function convert(string $nodeName, $data = []): DOMNode
     {

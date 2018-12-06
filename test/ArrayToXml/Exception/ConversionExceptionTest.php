@@ -6,7 +6,7 @@ namespace AlexTartanTest\Array2Xml\Exception;
 use AlexTartan\Array2Xml\Exception\ConversionException;
 use PHPUnit\Framework\TestCase;
 
-class ConversionExceptionTest extends TestCase
+final class ConversionExceptionTest extends TestCase
 {
     public function testCorrectType(): void
     {

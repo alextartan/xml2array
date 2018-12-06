@@ -8,7 +8,7 @@ use AlexTartan\Array2Xml\Exception\ConversionException;
 use AlexTartan\Array2Xml\XmlToArray;
 use PHPUnit\Framework\TestCase;
 
-class ArrayToXmlTest extends TestCase
+final class ArrayToXmlTest extends TestCase
 {
     public function testSimpleConversionFromString(): void
     {
@@ -86,7 +86,7 @@ class ArrayToXmlTest extends TestCase
             '<note><to><name>n1</name><file>q</file></to><to><name>n2</name><file>f</file></to></note>'
         );
 
-        $output = (new ArrayToXml)->buildXml(
+        $output = (new ArrayToXml())->buildXml(
             [
                 'note' => [
                     'to' => [
@@ -124,7 +124,7 @@ class ArrayToXmlTest extends TestCase
             )
         );
 
-        $output = (new ArrayToXml)->buildXml(
+        $output = (new ArrayToXml())->buildXml(
             [
                 'messages' => [
                     'note' => [
@@ -172,7 +172,7 @@ class ArrayToXmlTest extends TestCase
             )
         );
 
-        $output = (new ArrayToXml)->buildXml(
+        $output = (new ArrayToXml())->buildXml(
             [
                 'messages' => [
                     'note' => [
@@ -204,7 +204,7 @@ class ArrayToXmlTest extends TestCase
         $this->expectException(ConversionException::class);
         $this->expectExceptionMessage('Illegal character in tag name. tag: !WOW in node: note');
 
-        (new ArrayToXml)->buildXml(
+        (new ArrayToXml())->buildXml(
             [
                 'messages' => [
                     'note' => [
@@ -222,7 +222,7 @@ class ArrayToXmlTest extends TestCase
         $this->expectException(ConversionException::class);
         $this->expectExceptionMessage('Illegal character in attribute name. attribute: !id in node: note');
 
-        (new ArrayToXml)->buildXml(
+        (new ArrayToXml())->buildXml(
             [
                 'messages' => [
                     'note' => [
@@ -260,7 +260,7 @@ class ArrayToXmlTest extends TestCase
             )
         );
 
-        $output = (new ArrayToXml)->buildXml(
+        $output = (new ArrayToXml())->buildXml(
             [
                 'messages' => [
                     'note' => [

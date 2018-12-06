@@ -7,7 +7,7 @@ use AlexTartan\Array2Xml\Exception\ConversionException;
 use AlexTartan\Array2Xml\XmlToArray;
 use PHPUnit\Framework\TestCase;
 
-class XmlToArrayTest extends TestCase
+final class XmlToArrayTest extends TestCase
 {
     public function testBuildFromString(): void
     {
