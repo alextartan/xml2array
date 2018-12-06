@@ -30,7 +30,7 @@ final class ArrayToXmlTest extends TestCase
             ]
         );
 
-        static::assertSame(
+        self::assertSame(
             $doc->saveXML(),
             $output->saveXML()
         );
@@ -64,7 +64,7 @@ final class ArrayToXmlTest extends TestCase
 
         $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'note' => [
                     'to'      => 'Tove',
@@ -97,7 +97,7 @@ final class ArrayToXmlTest extends TestCase
             ]
         );
 
-        static::assertSame(
+        self::assertSame(
             $doc->saveXML(),
             $output->saveXML()
         );
@@ -144,7 +144,7 @@ final class ArrayToXmlTest extends TestCase
             ]
         );
 
-        static::assertSame(
+        self::assertSame(
             $doc->saveXML(),
             $output->saveXML()
         );
@@ -193,7 +193,7 @@ final class ArrayToXmlTest extends TestCase
             ]
         );
 
-        static::assertSame(
+        self::assertSame(
             $doc->saveXML(),
             $output->saveXML()
         );
@@ -278,7 +278,7 @@ final class ArrayToXmlTest extends TestCase
             ]
         );
 
-        static::assertSame(
+        self::assertSame(
             $doc->saveXML(),
             $output->saveXML()
         );

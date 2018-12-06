@@ -15,7 +15,7 @@ final class XmlToArrayTest extends TestCase
             '<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Body node</body></note>'
         );
 
-        static::assertSame(
+        self::assertSame(
             [
                 'note' => [
                     'to'      => 'Tove',
@@ -37,7 +37,7 @@ final class XmlToArrayTest extends TestCase
 
         $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'note' => [
                     'to'      => 'Tove',
@@ -56,7 +56,7 @@ final class XmlToArrayTest extends TestCase
             '<note><to>run1</to><to>run2</to></note>'
         );
 
-        static::assertSame(
+        self::assertSame(
             [
                 'note' => [
                     'to' => [
@@ -78,7 +78,7 @@ final class XmlToArrayTest extends TestCase
             'no_xml'
         );
 
-        static::assertSame(
+        self::assertSame(
             [
                 'note' => [
                     'to'      => 'Tove',
@@ -108,7 +108,7 @@ final class XmlToArrayTest extends TestCase
 
         $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'note' => [
                     'to'      => 'Tove',
@@ -141,7 +141,7 @@ final class XmlToArrayTest extends TestCase
 
         $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'table' => [
                     'name'   => 'African Coffee Table',
@@ -171,7 +171,7 @@ final class XmlToArrayTest extends TestCase
 
         $output = (new XmlToArray(['useNamespaces' => true]))->buildArrayFromDomDocument($doc);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'table' => [
                     'name'        => 'African Coffee Table',
@@ -212,7 +212,7 @@ final class XmlToArrayTest extends TestCase
 
         $output = (new XmlToArray(['useNamespaces' => true]))->buildArrayFromDomDocument($doc);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'root' => [
                     'h:table'     => [
@@ -256,7 +256,7 @@ final class XmlToArrayTest extends TestCase
 
         $output = (new XmlToArray(['useNamespaces' => true]))->buildArrayFromDomDocument($doc);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'table' => [
                     'name'   => [
@@ -301,7 +301,7 @@ final class XmlToArrayTest extends TestCase
 
         $output = (new XmlToArray())->buildArrayFromDomDocument($doc);
 
-        static::assertSame(
+        self::assertSame(
             [
                 'table' => [
                     'name'   => '',

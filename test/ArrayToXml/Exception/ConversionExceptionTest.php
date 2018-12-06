@@ -13,6 +13,6 @@ final class ConversionExceptionTest extends TestCase
         $msg       = 'someText';
         $exception = new ConversionException($msg);
 
-        static::assertSame($msg, $exception->getMessage());
+        self::assertSame($msg, $exception->getMessage());
     }
 }

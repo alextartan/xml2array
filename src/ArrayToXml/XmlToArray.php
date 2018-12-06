@@ -163,6 +163,7 @@ final class XmlToArray
                 if (!isset($output[$temp])) {
                     $output[$temp] = [];
                 }
+                /** @noinspection UnsupportedStringOffsetOperationsInspection */
                 $output[$temp][] = $value;
             } elseif ((is_string($value) && $value !== '') || (is_array($value) && count($value) !== 0)) {
                 //check if it is not an empty text node

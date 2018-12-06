@@ -1,9 +1,27 @@
 <?xml version="1.0"?>
-<ruleset name="Zend Framework coding standard">
-    <rule ref="./phpcs_ruleset.xml">
-    </rule>
+<ruleset name="AlexTartan Coding Standard">
+    <description>AlexTartan Coding Standard</description>
+
+    <!-- display progress -->
+    <arg value="p"/>
+    <arg name="colors"/>
 
     <!-- Paths to check -->
     <file>src</file>
     <file>test</file>
+
+    <!-- inherit rules from: -->
+    <rule ref="PSR12"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="150"/>
+            <property name="absoluteLineLimit" value="150"/>
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
 </ruleset>
