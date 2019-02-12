@@ -18,11 +18,6 @@ matrix:
     - CS_CHECK=false
     - TEST_COVERAGE=false
     - PHPSTAN=false
-  - php: 7.4
-    env:
-    - CS_CHECK=false
-    - TEST_COVERAGE=false
-    - PHPSTAN=false
   - php: nightly
     env:
     - CS_CHECK=false
