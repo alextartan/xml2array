@@ -50,7 +50,7 @@ final class ArrayToXml
             throw new ConversionException('Xml needs to have one root element');
         }
 
-        $firstKey = array_keys($data)[0];
+        $firstKey = (string)array_keys($data)[0];
 
         $this->xml->appendChild($this->convert($firstKey, $data[$firstKey]));
 

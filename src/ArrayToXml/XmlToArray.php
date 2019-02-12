@@ -83,7 +83,11 @@ final class XmlToArray
         // Convert the XML to an array, starting with the root node
         $docNodeName         = $this->xml->documentElement->nodeName;
         $array               = [];
-        $array[$docNodeName] = $this->convert($this->xml->documentElement);
+
+        $convertedElement = $this->convert($this->xml->documentElement);
+
+        // force $array[$docNodeName] to be an array
+        $array[$docNodeName] = is_array($convertedElement) ? $convertedElement : [$convertedElement];
 
         $attributesKey = $this->config->getAttributesKey();
 
