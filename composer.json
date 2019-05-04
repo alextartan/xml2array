@@ -28,6 +28,7 @@
     }
   },
   "require-dev": {
+    "infection/infection": "0.9.*",
     "phpunit/phpunit": "~8.0.2",
     "php-coveralls/php-coveralls": "~2.1",
     "phpstan/phpstan": "~0.11",
@@ -44,6 +45,7 @@
     "cs-check": "vendor/bin/phpcs",
     "cs-fix": "vendor/bin/phpcbf",
     "test": "vendor/bin/phpunit --colors=always",
+    "test-infection": "vendor/bin/infection --threads=4",
     "phpstan": "vendor/bin/phpstan analyse",
     "test-coverage": "vendor/bin/phpunit --colors=always --coverage-clover clover.xml",
     "upload-coverage": "vendor/bin/php-coveralls -v"

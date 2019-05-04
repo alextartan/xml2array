@@ -21,6 +21,7 @@ namespace AlexTartan\Array2Xml;
 
 use AlexTartan\Array2Xml\Exception\ConversionException;
 use DOMDocument;
+use DOMElement;
 use DOMNode;
 use LibXMLError;
 
@@ -81,8 +82,8 @@ final class XmlToArray
     private function extractArray(): array
     {
         // Convert the XML to an array, starting with the root node
-        $docNodeName         = $this->xml->documentElement->nodeName;
-        $array               = [];
+        $docNodeName = $this->xml->documentElement->nodeName;
+        $array       = [];
 
         $convertedElement = $this->convert($this->xml->documentElement);
 
@@ -91,17 +92,17 @@ final class XmlToArray
 
         $attributesKey = $this->config->getAttributesKey();
 
+        if (!count($this->namespaces)) {
+            // no namespaces, just return
+            return $array;
+        }
+
         // Add namespace information to the root node
-        if (count($this->namespaces) > 0) {
-            if (!isset($array[$docNodeName][$attributesKey])) {
-                $array[$docNodeName][$attributesKey] = [];
+        foreach ($this->namespaces as $uri => $prefix) {
+            if ((string)$prefix !== '') {
+                $prefix = self::ATTRIBUTE_NAMESPACE_SEPARATOR . $prefix;
             }
-            foreach ($this->namespaces as $uri => $prefix) {
-                if ((string)$prefix !== '') {
-                    $prefix = self::ATTRIBUTE_NAMESPACE_SEPARATOR . $prefix;
-                }
-                $array[$docNodeName][$attributesKey][self::ATTRIBUTE_NAMESPACE . $prefix] = $uri;
-            }
+            $array[$docNodeName][$attributesKey][self::ATTRIBUTE_NAMESPACE . $prefix] = $uri;
         }
 
         return $array;
@@ -153,7 +154,7 @@ final class XmlToArray
             /** @var DOMNode $child */
             $value = $this->convert($child);
 
-            if ($child instanceof \DOMElement) {
+            if ($child instanceof DOMElement) {
                 $temp = $child->nodeName;
 
                 // assume more nodes of same kind are coming
@@ -162,8 +163,11 @@ final class XmlToArray
                 }
                 /** @noinspection UnsupportedStringOffsetOperationsInspection */
                 $output[$temp][] = $value;
-            } elseif ((is_string($value) && $value !== '') || (is_array($value) && count($value) !== 0)) {
+            } elseif (is_string($value) && $value !== '') {
                 //check if it is not an empty text node
+                return $value;
+            } elseif (is_array($value) && count($value) !== 0) {
+                //check if it is not an empty array node
                 return $value;
             }
         }
@@ -233,8 +237,7 @@ final class XmlToArray
      */
     private function collateNamespaces(DOMNode $node): void
     {
-        if ($node->namespaceURI !== '' &&
-            $node->namespaceURI !== null &&
+        if (!empty($node->namespaceURI) &&
             !array_key_exists($node->namespaceURI, $this->namespaces) &&
             $this->config->isUseNamespaces()
         ) {

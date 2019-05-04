@@ -196,7 +196,7 @@ final class XmlToArrayTest extends TestCase
                     '<root xmlns:h="http://www.w3.org/TR/html4/" xmlns:f="https://www.w3schools.com/furniture">',
                     '<h:table>',
                     '<h:tr>',
-                    '<h:td>Apples</h:td>',
+                    '<h:td id="2">Apples</h:td>',
                     '<h:td>Bananas</h:td>',
                     '</h:tr>',
                     '</h:table>',
@@ -218,7 +218,12 @@ final class XmlToArrayTest extends TestCase
                     'h:table'     => [
                         'h:tr' => [
                             'h:td' => [
-                                'Apples',
+                                [
+                                    '@value'      => 'Apples',
+                                    '@attributes' => [
+                                        'id' => '2'
+                                    ],
+                                ],
                                 'Bananas',
                             ],
                         ],
@@ -246,7 +251,7 @@ final class XmlToArrayTest extends TestCase
                 '',
                 [
                     '<table>',
-                    '<name id="1">African Coffee Table</name>',
+                    '<name id="1" attrib="test">African Coffee Table</name>',
                     '<width id="2">80</width>',
                     '<length id="3">120</length>',
                     '</table>',
@@ -262,7 +267,8 @@ final class XmlToArrayTest extends TestCase
                     'name'   => [
                         '@value'      => 'African Coffee Table',
                         '@attributes' => [
-                            'id' => '1',
+                            'id'     => '1',
+                            'attrib' => 'test',
                         ],
                     ],
                     'width'  => [
