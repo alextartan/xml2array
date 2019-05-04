@@ -92,7 +92,7 @@ final class XmlToArray
 
         $attributesKey = $this->config->getAttributesKey();
 
-        if (!count($this->namespaces)) {
+        if (count($this->namespaces) === 0) {
             // no namespaces, just return
             return $array;
         }
@@ -237,7 +237,8 @@ final class XmlToArray
      */
     private function collateNamespaces(DOMNode $node): void
     {
-        if (!empty($node->namespaceURI) &&
+        if ($node->namespaceURI !== '' &&
+            $node->namespaceURI !== null &&
             !array_key_exists($node->namespaceURI, $this->namespaces) &&
             $this->config->isUseNamespaces()
         ) {
