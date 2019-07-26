@@ -56,6 +56,8 @@ final class XmlToArray
      * @param string $inputXml The XML to convert to an array
      *
      * @return array An array representation of the input XML
+     *
+     * @throws ConversionException
      */
     public function buildArrayFromString(string $inputXml): array
     {
@@ -71,6 +73,8 @@ final class XmlToArray
      * @param DOMDocument $inputXml The XML to convert to an array
      *
      * @return array An array representation of the input XML
+     *
+     * @throws ConversionException
      */
     public function buildArrayFromDomDocument(DOMDocument $inputXml): array
     {
@@ -79,8 +83,15 @@ final class XmlToArray
         return $this->extractArray();
     }
 
+    /**
+     * @throws ConversionException
+     */
     private function extractArray(): array
     {
+        if ($this->xml->documentElement === null) {
+            throw new ConversionException('Empty XML');
+        }
+
         // Convert the XML to an array, starting with the root node
         $docNodeName = $this->xml->documentElement->nodeName;
         $array       = [];
