@@ -9,7 +9,7 @@ Current build status
 [![Coverage Status](https://coveralls.io/repos/github/alextartan/xml2array/badge.svg?branch=master)](https://coveralls.io/github/alextartan/xml2array?branch=master)
 [![Infection MSI](https://badge.stryker-mutator.io/github.com/alextartan/xml2array/master)](https://stryker-mutator.github.io)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alextartan/xml2array/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/alextartan/xml2array/?branch=master)
-[![Packagist](https://img.shields.io/badge/Packagist-alextartan%2Fxml2array-blue.svg)](https://packagist.org/packages/alextartan/xml2array)
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=alextartan/xml2array)](https://dependabot.com)
 [![Downloads](https://img.shields.io/badge/dynamic/json.svg?url=https://repo.packagist.org/packages/alextartan/xml2array.json&label=Downloads&query=$.package.downloads.total&colorB=orange)](https://packagist.org/packages/alextartan/xml2array)
 
 Install
