@@ -75,20 +75,8 @@ final class XmlToArrayTest extends TestCase
         $this->expectException(ConversionException::class);
         $this->expectExceptionMessage("Start tag expected, '<' not found");
 
-        $output = (new XmlToArray())->buildArrayFromString(
+        (new XmlToArray())->buildArrayFromString(
             'no_xml'
-        );
-
-        self::assertSame(
-            [
-                'note' => [
-                    'to'      => 'Tove',
-                    'from'    => 'Jani',
-                    'heading' => 'Reminder',
-                    'body'    => 'Body node',
-                ],
-            ],
-            $output
         );
     }
 

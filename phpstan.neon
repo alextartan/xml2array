@@ -3,7 +3,12 @@ includes:
 	- vendor/phpstan/phpstan-phpunit/rules.neon
 	- vendor/phpstan/phpstan-strict-rules/rules.neon
 parameters:
-	level: 7
-	paths:
-		- src
-		- test
+    level: 7
+    paths:
+        - src
+        - test
+
+    ignoreErrors:
+        -
+            message: '#Cannot access property \$nodeName on DOMElement|null#'
+            path: %currentWorkingDirectory%/src/ArrayToXml/XmlToArray.php
