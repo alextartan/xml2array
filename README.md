@@ -34,12 +34,13 @@ Convert an XML (either DOMDocument or string) to an array
 
     // default value:
     $config =  [
-        'version'       => '1.0',
-        'encoding'      => 'UTF-8',
-        'attributesKey' => '@attributes',
-        'cdataKey'      => '@cdata',
-        'valueKey'      => '@value',
-        'useNamespaces' => false,
+        'version'             => '1.0',
+        'encoding'            => 'UTF-8',
+        'attributesKey'       => '@attributes',
+        'cdataKey'            => '@cdata',
+        'valueKey'            => '@value',
+        'useNamespaces'       => false,
+        'forceOneElementArray => false,
     ];
 
     $xtoa  = new XmlToArray($config);
