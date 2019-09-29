@@ -3,15 +3,18 @@ declare(strict_types=1);
 
 namespace AlexTartan\Array2Xml;
 
+use function array_merge;
+
 final class XmlToArrayConfig
 {
     private const DEFAULTS = [
-        'version'       => '1.0',
-        'encoding'      => 'UTF-8',
-        'attributesKey' => '@attributes',
-        'cdataKey'      => '@cdata',
-        'valueKey'      => '@value',
-        'useNamespaces' => false,
+        'version'              => '1.0',
+        'encoding'             => 'UTF-8',
+        'attributesKey'        => '@attributes',
+        'cdataKey'             => '@cdata',
+        'valueKey'             => '@value',
+        'useNamespaces'        => false,
+        'forceOneElementArray' => false,
     ];
 
     /** @var string */
@@ -38,14 +41,16 @@ final class XmlToArrayConfig
         string $attributesKey,
         string $cdataKey,
         string $valueKey,
-        bool $useNamespaces
+        bool $useNamespaces,
+        bool $forceOneElementArray
     ) {
-        $this->version       = $version;
-        $this->encoding      = $encoding;
-        $this->attributesKey = $attributesKey;
-        $this->cdataKey      = $cdataKey;
-        $this->valueKey      = $valueKey;
-        $this->useNamespaces = $useNamespaces;
+        $this->version              = $version;
+        $this->encoding             = $encoding;
+        $this->attributesKey        = $attributesKey;
+        $this->cdataKey             = $cdataKey;
+        $this->valueKey             = $valueKey;
+        $this->useNamespaces        = $useNamespaces;
+        $this->forceOneElementArray = $forceOneElementArray;
     }
 
     public static function fromArray(array $configData = []): self
@@ -58,7 +63,8 @@ final class XmlToArrayConfig
             $config['attributesKey'],
             $config['cdataKey'],
             $config['valueKey'],
-            (bool)$config['useNamespaces']
+            (bool)$config['useNamespaces'],
+            (bool)$config['forceOneElementArray']
         );
     }
 
@@ -90,5 +96,10 @@ final class XmlToArrayConfig
     public function isUseNamespaces(): bool
     {
         return $this->useNamespaces;
+    }
+
+    public function isForceOneElementArray(): bool
+    {
+        return $this->forceOneElementArray;
     }
 }
