@@ -35,6 +35,9 @@ final class XmlToArrayConfig
     /** @var bool */
     private $useNamespaces;
 
+    /** @var bool */
+    private $forceOneElementArray;
+
     private function __construct(
         string $version,
         string $encoding,
