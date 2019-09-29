@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -24,6 +25,7 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use LibXMLError;
+
 use function array_key_exists;
 use function is_array;
 use function is_string;
@@ -31,6 +33,7 @@ use function libxml_clear_errors;
 use function libxml_get_last_error;
 use function libxml_use_internal_errors;
 use function trim;
+
 use const XML_CDATA_SECTION_NODE;
 use const XML_ELEMENT_NODE;
 use const XML_TEXT_NODE;
@@ -251,7 +254,8 @@ final class XmlToArray
      */
     private function collateNamespaces(DOMNode $node): void
     {
-        if ($node->namespaceURI !== '' &&
+        if (
+            $node->namespaceURI !== '' &&
             $node->namespaceURI !== null &&
             !array_key_exists($node->namespaceURI, $this->namespaces) &&
             $this->config->isUseNamespaces()
