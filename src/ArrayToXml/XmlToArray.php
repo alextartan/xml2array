@@ -24,6 +24,16 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use LibXMLError;
+use function array_key_exists;
+use function is_array;
+use function is_string;
+use function libxml_clear_errors;
+use function libxml_get_last_error;
+use function libxml_use_internal_errors;
+use function trim;
+use const XML_CDATA_SECTION_NODE;
+use const XML_ELEMENT_NODE;
+use const XML_TEXT_NODE;
 
 /**
  * This class helps convert an XML to an array
@@ -190,10 +200,12 @@ final class XmlToArray
             return $output;
         }
 
-        // if only one node of its kind, assign it directly instead if array($value);
-        foreach ($output as $key => $value) {
-            if (is_array($value) && count($value) === 1) {
-                $output[$key] = $value[0];
+        if (!$this->config->isForceOneElementArray()) {
+            // if only one node of its kind, assign it directly instead if array($value);
+            foreach ($output as $key => $value) {
+                if (is_array($value) && count($value) === 1) {
+                    $output[$key] = $value[0];
+                }
             }
         }
 

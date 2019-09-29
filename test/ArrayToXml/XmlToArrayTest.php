@@ -7,6 +7,7 @@ use AlexTartan\Array2Xml\Exception\ConversionException;
 use AlexTartan\Array2Xml\XmlToArray;
 use DOMDocument;
 use PHPUnit\Framework\TestCase;
+use function implode;
 
 final class XmlToArrayTest extends TestCase
 {
@@ -302,6 +303,36 @@ final class XmlToArrayTest extends TestCase
                     'name'   => '',
                     'width'  => '80',
                     'length' => '120',
+                ],
+            ],
+            $output
+        );
+    }
+
+    public function testXmlWithForceOneElementNodes(): void
+    {
+        $doc = new DOMDocument('1.0', 'UTF-8');
+        $doc->loadXML(
+            implode(
+                '',
+                [
+                    '<table>',
+                    '<name>sd</name>',
+                    '<width>80</width>',
+                    '<length>120</length>',
+                    '</table>',
+                ]
+            )
+        );
+
+        $output = (new XmlToArray(['forceOneElementArray' => true]))->buildArrayFromDomDocument($doc);
+
+        self::assertSame(
+            [
+                'table' => [
+                    'name'   => ['sd'],
+                    'width'  => ['80'],
+                    'length' => ['120'],
                 ],
             ],
             $output
