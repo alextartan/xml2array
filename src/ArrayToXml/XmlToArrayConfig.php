@@ -18,26 +18,19 @@ final class XmlToArrayConfig
         'forceOneElementArray' => false,
     ];
 
-    /** @var string */
-    private $version;
+    private string $version;
 
-    /** @var string */
-    private $encoding;
+    private string $encoding;
 
-    /** @var string */
-    private $attributesKey;
+    private string $attributesKey;
 
-    /** @var string */
-    private $cdataKey;
+    private string $cdataKey;
 
-    /** @var string */
-    private $valueKey;
+    private string $valueKey;
 
-    /** @var bool */
-    private $useNamespaces;
+    private bool $useNamespaces;
 
-    /** @var bool */
-    private $forceOneElementArray;
+    private bool $forceOneElementArray;
 
     private function __construct(
         string $version,

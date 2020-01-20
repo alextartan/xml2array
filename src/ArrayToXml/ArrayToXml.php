@@ -30,11 +30,9 @@ use DOMNode;
  */
 final class ArrayToXml
 {
-    /** @var DOMDocument */
-    private $xml;
+    private DOMDocument $xml;
 
-    /** @var ArrayToXmlConfig */
-    private $config;
+    private ArrayToXmlConfig $config;
 
     public function __construct(array $config = [])
     {

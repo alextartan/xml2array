@@ -15,23 +15,17 @@ final class ArrayToXmlConfig
         'formatOutput'  => false,
     ];
 
-    /** @var string */
-    private $version;
+    private string $version;
 
-    /** @var string */
-    private $encoding;
+    private string $encoding;
 
-    /** @var string */
-    private $attributesKey;
+    private string $attributesKey;
 
-    /** @var string */
-    private $cdataKey;
+    private string $cdataKey;
 
-    /** @var string */
-    private $valueKey;
+    private string $valueKey;
 
-    /** @var bool */
-    private $formatOutput;
+    private bool $formatOutput;
 
     private function __construct(
         string $version,

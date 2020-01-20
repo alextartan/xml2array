@@ -49,14 +49,12 @@ final class XmlToArray
     /** The string that separates the namespace attribute from the prefix for the namespace*/
     private const ATTRIBUTE_NAMESPACE_SEPARATOR = ':';
 
-    /** @var XmlToArrayConfig */
-    private $config;
+    private XmlToArrayConfig $config;
 
-    /** @var DOMDocument */
-    private $xml;
+    private DOMDocument $xml;
 
-    /** @var array The working list of XML namespaces */
-    private $namespaces = [];
+    /** @var string[] The working list of XML namespaces */
+    private array $namespaces = [];
 
     public function __construct(array $config = [])
     {
@@ -114,7 +112,7 @@ final class XmlToArray
 
         // Add namespace information to the root node
         foreach ($this->namespaces as $uri => $prefix) {
-            if ((string)$prefix !== '') {
+            if ($prefix !== '') {
                 $prefix = self::ATTRIBUTE_NAMESPACE_SEPARATOR . $prefix;
             }
             $array[$docNodeName][$attributesKey][self::ATTRIBUTE_NAMESPACE . $prefix] = $uri;
